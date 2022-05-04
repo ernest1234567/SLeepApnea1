@@ -1,0 +1,25 @@
+﻿body {
+    background: white;
+    font-family: 'Abel';
+    font-size: 64px;
+    color: white;
+}
+
+h1 {
+    font-family: 'Abel';
+    font-size: 64px;
+    color: blue;
+    filter: brightness(100%)
+}
+
+#picture {
+    background-image: url('..//hospital.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    filter: brightness(50%)
+}
