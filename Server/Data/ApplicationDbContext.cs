@@ -18,9 +18,8 @@ namespace SLeepApnea.Server.Data
 			IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
 		{
 		}
-		public DbSet<DataCollected> DataCollecteds { get; set; }
-		public DbSet<Patient> Patients { get; set; }
-		public DbSet<Doctor> Doctors { get; set; }
+		public DbSet<VitalData> VitalDatas { get; set; }
+		public DbSet<User> Users { get; set; }
 
 	}
 }
