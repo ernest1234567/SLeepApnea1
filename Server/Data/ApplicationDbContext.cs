@@ -19,6 +19,8 @@ namespace SLeepApnea.Server.Data
 		{
 		}
 		public DbSet<DataCollected> DataCollecteds { get; set; }
-		public DbSet<Ring> Rings { get; set; }
+		public DbSet<Patient> Patients { get; set; }
+		public DbSet<Doctor> Staffs { get; set; }
+
 	}
 }

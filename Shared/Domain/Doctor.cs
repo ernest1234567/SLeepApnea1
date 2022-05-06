@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace SLeepApnea.Shared.Domain
 {
-	public class Ring : BaseDomainModel
+	public class Doctor
 	{
+		public int DoctorID { get; set; }
 		public string Name { get; set; }
+		public string Email { get; set; }
+		public int Phone { get; set; }
 	}
 }
