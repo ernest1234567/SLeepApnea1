@@ -1,0 +1,22 @@
+﻿@page "/vitalDatas/view/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3>View VitalData</h3>
+
+<FormComponent vitalData="vitalData" OnValidSubmit="ViewVitalData" Disabled="true" />
+
+@code {
+	[Parameter] public int id { get; set; }
+	VitalData vitalData = new VitalData();
+
+	protected async override Task OnParametersSetAsync()
+	{
+		vitalData = await _client.GetFromJsonAsync<VitalData>($"{Endpoints.VitalDatasEndpoint}/{id}");
+	}
+	async Task ViewVitalData()
+	{
+		await _client.PutAsJsonAsync($"{Endpoints.VitalDatasEndpoint}/{id}", vitalData);
+		_navManager.NavigateTo("/vitalDatas/");
+	}
+}

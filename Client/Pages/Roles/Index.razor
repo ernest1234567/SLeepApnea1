@@ -1,0 +1,86 @@
+﻿@page "/roless/"
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient _client
+@inject IJSRuntime js
+
+@inject HttpInterceptorService _interceptor
+@implements IDisposable
+@attribute [Authorize]
+
+
+<h3 class="card-title">Roles</h3>
+<br />
+
+<a href="/roless/create" class="btn btn-secondary">
+	<span class="oi oi-plus"></span>
+	Create New Roles
+</a>
+<br />
+<br />
+
+
+@if (roless == null)
+{
+	<div class="alert alert-info">Loading Roles...</div>
+}
+else
+{
+	<table class="table table-responsive" id="rolessTable">
+		<thead>
+			<tr>
+				<th>RoleName</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var roles in roless)
+			{
+				<tr>
+				<td>@roles.rolename</td>
+				<td>
+					<a href="/roless/view/@roles.ID" class="btn btn-primary">
+						<span class="oi oi-book"></span>
+					</a>
+					<a href="/roless/edit/@roles.ID" class="btn btn-warning">
+						<span class="oi oi-pencil"></span>
+					</a>
+					<button class="btn btn-danger" @onclick="@(()=>Delete(roles.ID))">
+						<span class="oi oi-delete"></span>
+					</button>
+				</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+}
+
+
+@code {
+
+	private List<Roles> roless;
+	protected async override Task OnInitializedAsync()
+	{
+		_interceptor.MonitorEvent();
+		roless = await _client.GetFromJsonAsync<List<Roles>>("api/Roles");
+	}
+
+	protected async override Task OnAfterRenderAsync(bool firstRender)
+	{
+		await js.InvokeVoidAsync("AddDataTable", "#rolessTable");
+	}
+
+	public void Dispose()
+	{
+		js.InvokeVoidAsync("DataTablesDispose", "#rolessTable");
+	}
+	async Task Delete(int rolesId)
+	{
+		var roles = roless.First(q => q.ID == rolesId);
+		var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {roles.ID}?");
+		if (confirm)
+		{
+			await _client.DeleteAsync($"api/roles/{rolesId}");
+			await OnInitializedAsync();
+		}
+	}
+}

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SLeepApnea.Client.Services;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace SLeepApnea.Client
 {
@@ -18,11 +20,17 @@ namespace SLeepApnea.Client
 			var builder = WebAssemblyHostBuilder.CreateDefault(args);
 			builder.RootComponents.Add<App>("#app");
 
-			builder.Services.AddHttpClient("SLeepApnea.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+			builder.Services.AddHttpClient("SLeepApnea.ServerAPI",(sp,client) => {
+				client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+				client.EnableIntercept(sp); 
+			})
 				.AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 			// Supply HttpClient instances that include access tokens when making requests to the server project
 			builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("SLeepApnea.ServerAPI"));
+
+			builder.Services.AddHttpClientInterceptor();
+			builder.Services.AddScoped<HttpInterceptorService>();
 
 			builder.Services.AddApiAuthorization();
 

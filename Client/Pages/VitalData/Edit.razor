@@ -1,0 +1,23 @@
+﻿@page "/vitalDatas/edit/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3>Edit VitalData</h3>
+
+<FormComponent ButtonText="Update" OnValidSubmit="EditVitalData" vitalData="vitalData" />
+
+@code {
+	[Parameter] public int id { get; set; }
+	VitalData vitalData = new VitalData();
+
+	protected async override Task OnParametersSetAsync()
+	{
+		vitalData = await _client.GetFromJsonAsync<VitalData>($"{Endpoints.VitalDatasEndpoint}/{id}");
+	}
+
+	async Task EditVitalData()
+	{
+		await _client.PutAsJsonAsync($"{Endpoints.VitalDatasEndpoint}/{id}", vitalData);
+		_navManager.NavigateTo("/vitalDatas/");
+	}
+}

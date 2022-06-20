@@ -1,0 +1,55 @@
+﻿@inject HttpClient _client
+<EditForm Model="@roless" OnValidSubmit="@OnValidSubmit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<fieldset disabled="@Disabled">
+		@*<div class="form-group">
+			<label>Patient: </label>
+			<div>
+				<InputSelect @bind-Value="roless.PatientID" class="form-control">
+					<option value="">-- Select Patient --</option>
+					@if (Patients != null)
+					{
+						foreach (var patient in Patients)
+						{
+							<option value="@patient.ID">@patient.ID</option>
+						}
+					}
+				</InputSelect>
+				<ValidationMessage For="@(() => roless.PatientID)" />
+			</div>
+		</div>*@
+		<div class="form-group">
+			<label>RoleName: </label>
+			<div>
+				<InputText @bind-Value="@roless.rolename" class="form-control" />
+				<ValidationMessage For="@(() => roless.rolename)" />
+			</div>
+		</div>
+
+	</fieldset>
+
+	@if (!Disabled)
+	{
+		<button type="submit" class="btn btn-success btn-block">
+			@ButtonText
+		</button>
+	}
+	<BackToList Target="roless" />
+</EditForm>
+
+@code {
+	[Parameter] public bool Disabled { get; set; } = false;
+	[Parameter] public Roles roless { get; set; }
+	[Parameter] public string ButtonText { get; set; } = "Save";
+	[Parameter] public EventCallback OnValidSubmit { get; set; }
+
+	private IList<Patient> Patients;
+
+	protected async override Task OnInitializedAsync()
+	{
+		Patients = await _client.GetFromJsonAsync<List<Patient>>($"{Endpoints.PatientsEndpoint}");
+		//Patient.DateOut = DateTime.Now;
+	}
+}

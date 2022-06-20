@@ -1,0 +1,101 @@
+﻿@page "/doctors/"
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient _client
+@inject IJSRuntime js
+@inject HttpInterceptorService _interceptor
+@implements IDisposable
+@attribute [Authorize ]
+
+
+<h3 class="card-title">Doctor</h3>
+<br />
+
+<a href="/doctors/create" class="btn btn-secondary">
+	<span class="oi oi-plus"></span>
+	Create New Doctors
+</a>
+<br />
+<br />
+
+
+@if (doctors == null)
+{
+	<div class="alert alert-info">Loading Doctors...</div>
+}
+else
+{
+	<table class="table table-responsive" id="doctorsTable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>PhoneNumber</th>
+				<th>Email</th>
+				<th>Role</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var doctor in doctors)
+			{
+			<tr>
+				<td>@doctor.Name</td>
+				<td>@doctor.PhoneNumber</td>
+				<td>@doctor.Email</td>
+				@foreach (var roles in roless)
+				{
+					if (doctor.RolesID == roles.ID)
+					{
+						<td>@roles.ID</td>
+					}
+
+				}
+				<td>
+					<a href="/doctors/view/@doctor.ID" class="btn btn-primary">
+						<span class="oi oi-book"></span>
+					</a>
+					<a href="/doctors/edit/@doctor.ID" class="btn btn-warning">
+						<span class="oi oi-pencil"></span>
+					</a>
+					<button class="btn btn-danger" @onclick="@(()=>Delete(doctor.ID))">
+						<span class="oi oi-delete"></span>
+					</button>
+				</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+}
+
+
+@code {
+
+	private List<Doctor> doctors;
+	private IList<Roles> roless;
+
+	protected async override Task OnInitializedAsync()
+	{
+		_interceptor.MonitorEvent();
+		doctors = await _client.GetFromJsonAsync<List<Doctor>>("api/doctors");
+		roless = await _client.GetFromJsonAsync<List<Roles>>("api/Roles");
+	}
+
+	protected async override Task OnAfterRenderAsync(bool firstRender)
+	{
+		await js.InvokeVoidAsync("AddDataTable", "#doctorsTable");
+	}
+
+	public void Dispose()
+	{
+		js.InvokeVoidAsync("DataTablesDispose", "#doctorsTable");
+	}
+	async Task Delete(int doctorId)
+	{
+		var doctor = doctors.First(q => q.ID == doctorId);
+		var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {doctor.Name}?");
+		if (confirm)
+		{
+			await _client.DeleteAsync($"api/doctors/{doctorId}");
+			await OnInitializedAsync();
+		}
+	}
+}

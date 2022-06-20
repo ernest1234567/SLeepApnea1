@@ -1,0 +1,26 @@
+﻿@page "/vitalDatas/create/"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New VitalDatas</h3>
+<hr />
+<br />
+
+<FormComponent ButtonText="Create VitalData" vitalData="vitalData" OnValidSubmit="@CreateVitalData" />
+
+@code {
+	VitalData vitalData = new VitalData();
+	private IList<Patient> Patients;
+
+	protected async override Task OnInitializedAsync()
+	{
+		Patients = await _client.GetFromJsonAsync<List<Patient>>($"{Endpoints.PatientsEndpoint}");
+		//booking.DateOut = DateTime.Now;
+	}
+
+	private async Task CreateVitalData()
+	{
+		await _client.PostAsJsonAsync(Endpoints.VitalDatasEndpoint, vitalData);
+		_navManager.NavigateTo("/vitalDatas/");
+	}
+}

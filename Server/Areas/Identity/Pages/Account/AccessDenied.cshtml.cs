@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Identity;
 
 namespace SLeepApnea.Server.Areas.Identity.Pages.Account
 {
@@ -10,7 +11,6 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
     {
         public void OnGet()
         {
-
         }
     }
 }

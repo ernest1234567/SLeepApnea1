@@ -3,20 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SLeepApnea.Server.Data;
 
-namespace SLeepApnea.Server.Data.Migrations
+namespace SLeepApnea.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220527074554_roles")]
+    partial class roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.16")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -305,6 +307,9 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -328,7 +333,7 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SLeepApnea.Shared.Domain.User", b =>
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Doctor", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -341,12 +346,55 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone")
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Patient", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Roles", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DoctorID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatientID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Users");
+                    b.HasIndex("DoctorID");
+
+                    b.HasIndex("PatientID");
+
+                    b.ToTable("Roless");
                 });
 
             modelBuilder.Entity("SLeepApnea.Shared.Domain.VitalData", b =>
@@ -365,13 +413,21 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PatientID")
+                        .HasColumnType("int");
+
                     b.Property<int>("SpO2")
                         .HasColumnType("int");
 
                     b.Property<int>("SpO2Count")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("PatientID");
 
                     b.ToTable("VitalDatas");
                 });
@@ -425,6 +481,35 @@ namespace SLeepApnea.Server.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Roles", b =>
+                {
+                    b.HasOne("SLeepApnea.Shared.Domain.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorID");
+
+                    b.HasOne("SLeepApnea.Shared.Domain.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientID");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.VitalData", b =>
+                {
+                    b.HasOne("SLeepApnea.Shared.Domain.Patient", "Patient")
+                        .WithMany("VitalDatas")
+                        .HasForeignKey("PatientID");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Patient", b =>
+                {
+                    b.Navigation("VitalDatas");
                 });
 #pragma warning restore 612, 618
         }

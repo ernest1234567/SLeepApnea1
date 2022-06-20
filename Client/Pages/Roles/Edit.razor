@@ -1,0 +1,23 @@
+﻿@page "/roless/edit/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3>Edit Roles</h3>
+
+<FormComponent ButtonText="Update" OnValidSubmit="Editroles" roless="roles" />
+
+@code {
+	[Parameter] public int id { get; set; }
+	Roles roles = new Roles();
+
+	protected async override Task OnParametersSetAsync()
+	{
+		roles = await _client.GetFromJsonAsync<Roles>($"{Endpoints.RolessEndpoint}/{id}");
+	}
+
+	async Task Editroles()
+	{
+		await _client.PutAsJsonAsync($"{Endpoints.RolessEndpoint}/{id}", roles);
+		_navManager.NavigateTo("/roless/");
+	}
+}

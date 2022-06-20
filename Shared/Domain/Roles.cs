@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace SLeepApnea.Shared.Domain
 {
-	public class User : BaseDomainModel
+	public class Roles : BaseDomainModel
 	{
-		public string Name { get; set; }
-		public string Email { get; set; }
-		public int Phone { get; set; }
-
+		public string rolename { get; set; }
+		
 	}
 }

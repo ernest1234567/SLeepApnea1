@@ -7,18 +7,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SLeepApnea.Server.Data;
 
-namespace SLeepApnea.Server.Data.Migrations
+namespace SLeepApnea.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220506040011_applicationDBcontext")]
-    partial class applicationDBcontext
+    [Migration("20220616100038_doctor")]
+    partial class doctor
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.16")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -307,6 +307,9 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -330,7 +333,7 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SLeepApnea.Shared.Domain.User", b =>
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Doctor", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -343,12 +346,58 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone")
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RolesID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Users");
+                    b.HasIndex("RolesID");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Patient", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RolesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RolesID");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Roles", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("rolename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Roless");
                 });
 
             modelBuilder.Entity("SLeepApnea.Shared.Domain.VitalData", b =>
@@ -367,13 +416,26 @@ namespace SLeepApnea.Server.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DoctorID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatientID")
+                        .HasColumnType("int");
+
                     b.Property<int>("SpO2")
                         .HasColumnType("int");
 
                     b.Property<int>("SpO2Count")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("DoctorID");
+
+                    b.HasIndex("PatientID");
 
                     b.ToTable("VitalDatas");
                 });
@@ -427,6 +489,39 @@ namespace SLeepApnea.Server.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Doctor", b =>
+                {
+                    b.HasOne("SLeepApnea.Shared.Domain.Roles", "Roles")
+                        .WithMany()
+                        .HasForeignKey("RolesID");
+
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.Patient", b =>
+                {
+                    b.HasOne("SLeepApnea.Shared.Domain.Roles", "Roles")
+                        .WithMany()
+                        .HasForeignKey("RolesID");
+
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.VitalData", b =>
+                {
+                    b.HasOne("SLeepApnea.Shared.Domain.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorID");
+
+                    b.HasOne("SLeepApnea.Shared.Domain.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientID");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

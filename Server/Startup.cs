@@ -1,13 +1,16 @@
 using System.Linq;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Radzen;
 using SLeepApnea.Server.Data;
 using SLeepApnea.Server.Models;
 
@@ -33,16 +36,23 @@ namespace SLeepApnea.Server
 			services.AddDatabaseDeveloperPageExceptionFilter();
 
 			services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 			services.AddIdentityServer()
 				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
+			services.AddScoped<DialogService>();
+			services.AddScoped<NotificationService>();
+			services.AddScoped<TooltipService>();
+			services.AddScoped<ContextMenuService>();
 			services.AddAuthentication()
-				.AddIdentityServerJwt();
 
-			services.AddControllersWithViews();
+				.AddIdentityServerJwt();
+			services.AddControllersWithViews().
+				AddNewtonsoftJson(op => op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 			services.AddRazorPages();
+			
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +63,7 @@ namespace SLeepApnea.Server
 				app.UseDeveloperExceptionPage();
 				app.UseMigrationsEndPoint();
 				app.UseWebAssemblyDebugging();
+
 			}
 			else
 			{

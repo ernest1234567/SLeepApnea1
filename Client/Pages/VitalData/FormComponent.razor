@@ -1,0 +1,90 @@
+﻿@inject HttpClient _client
+<EditForm Model="@vitalData" OnValidSubmit="@OnValidSubmit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<fieldset disabled="@Disabled">
+		@*<div class="form-group">
+			<label>Patient: </label>
+			<div>
+				<InputSelect @bind-Value="vitalData.PatientID" class="form-control">
+					<option value="">-- Select Patient --</option>
+					@if (Patients != null)
+					{
+						foreach (var patient in Patients)
+						{
+							<option value="@patient.ID">@patient.Name</option>
+						}
+					}
+				</InputSelect>
+				<ValidationMessage For="@(() => vitalData.PatientID)" />
+			</div>
+		</div>*@
+		<div class="form-group">
+			<label>Date: </label>
+			<div>
+				<InputDate @bind-Value="@vitalData.Date" class="form-control" />
+				<ValidationMessage For="@(() => vitalData.Date)" />
+			</div>
+		</div>
+		@*<div class="form-group">
+
+			<label>Time: </label>
+			<div>
+				<InputDate @bind-Value="@vitalData.Time" class="form-control" />
+				<ValidationMessage For="@(() => vitalData.Time)" />
+			</div>
+		</div>*@
+		<div class="form-group">
+			<label>BPM: </label>
+			<div>
+				<InputNumber @bind-Value="@vitalData.BPM" class="form-control" />
+				<ValidationMessage For="@(() => vitalData.BPM)" />
+			</div>
+		</div>
+		@*<div class="form-group">
+			<label>BPMCount: </label>
+			<div>
+				<InputNumber @bind-Value="@vitalData.BPMCount" class="form-control" />
+				<ValidationMessage For="@(() => vitalData.BPMCount)" />
+			</div>
+		</div>*@
+		<div class="form-group">
+			<label>SpO2: </label>
+			<div>
+				<InputNumber @bind-Value="@vitalData.SpO2" class="form-control" />
+				<ValidationMessage For="@(() => vitalData.SpO2)" />
+			</div>
+		</div>
+		@*<div class="form-group">
+			<label>SpO2Count: </label>
+			<div>
+				<InputNumber @bind-Value="@vitalData.SpO2Count" class="form-control" />
+				<ValidationMessage For="@(() => vitalData.SpO2Count)" />
+			</div>
+		</div>*@
+
+	</fieldset>
+
+	@if (!Disabled)
+	{
+		<button type="submit" class="btn btn-success btn-block">
+			@ButtonText
+		</button>
+	}
+	<BackToList Target="vitalDatas" />
+</EditForm>
+
+@code {
+	[Parameter] public bool Disabled { get; set; } = false;
+	[Parameter] public VitalData vitalData { get; set; }
+	[Parameter] public string ButtonText { get; set; } = "Save";
+	[Parameter] public EventCallback OnValidSubmit { get; set; }
+
+	private IList<Patient> Patients;
+	protected async override Task OnInitializedAsync()
+	{
+		Patients = await _client.GetFromJsonAsync<List<Patient>>($"{Endpoints.PatientsEndpoint}");
+		//Patient.DateOut = DateTime.Now;
+	}
+}

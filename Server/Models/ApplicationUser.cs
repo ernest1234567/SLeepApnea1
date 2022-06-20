@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using SLeepApnea.Shared.Domain;
 
 namespace SLeepApnea.Server.Models
 {
@@ -10,5 +11,7 @@ namespace SLeepApnea.Server.Models
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
+		public int Role { get; set; }
+
 	}
 }

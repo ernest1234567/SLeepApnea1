@@ -1,0 +1,19 @@
+﻿@page "/doctors/create/"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New Doctors</h3>
+<hr />
+<br />
+
+<FormComponent ButtonText="Create doctor" doctor="doctor" OnValidSubmit="@Createdoctor" />
+
+@code {
+	Doctor doctor = new Doctor();
+
+	private async Task Createdoctor()
+	{
+		await _client.PostAsJsonAsync(Endpoints.DoctorsEndpoint, doctor);
+		_navManager.NavigateTo("/doctors/");
+	}
+}

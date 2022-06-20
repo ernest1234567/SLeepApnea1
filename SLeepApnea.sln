@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLeepApnea.Server", "Server\SLeepApnea.Server.csproj", "{9E3A5384-8A15-4D03-84FE-B9CB38A2880A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SLeepApnea.Server", "Server\SLeepApnea.Server.csproj", "{9E3A5384-8A15-4D03-84FE-B9CB38A2880A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLeepApnea.Client", "Client\SLeepApnea.Client.csproj", "{96BB09B1-2391-47D3-BD5E-474E78C15FD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SLeepApnea.Client", "Client\SLeepApnea.Client.csproj", "{96BB09B1-2391-47D3-BD5E-474E78C15FD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SLeepApnea.Shared", "Shared\SLeepApnea.Shared.csproj", "{F2CB33D7-BAA6-46C3-937A-6CD7E518899B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SLeepApnea.Shared", "Shared\SLeepApnea.Shared.csproj", "{F2CB33D7-BAA6-46C3-937A-6CD7E518899B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

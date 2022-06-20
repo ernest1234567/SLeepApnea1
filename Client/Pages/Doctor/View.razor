@@ -1,0 +1,22 @@
+﻿@page "/doctors/view/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3>View Doctor</h3>
+
+<FormComponent doctor="doctor" OnValidSubmit="Viewdoctor" Disabled="true" />
+
+@code {
+	[Parameter] public int id { get; set; }
+	Doctor doctor = new Doctor();
+
+	protected async override Task OnParametersSetAsync()
+	{
+		doctor = await _client.GetFromJsonAsync<Doctor>($"{Endpoints.DoctorsEndpoint}/{id}");
+	}
+	async Task Viewdoctor()
+	{
+		await _client.PutAsJsonAsync($"{Endpoints.DoctorsEndpoint}/{id}", doctor);
+		_navManager.NavigateTo("/doctors/");
+	}
+}
