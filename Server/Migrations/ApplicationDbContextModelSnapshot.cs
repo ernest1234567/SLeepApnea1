@@ -305,8 +305,8 @@ namespace SLeepApnea.Server.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Roles")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -381,6 +381,60 @@ namespace SLeepApnea.Server.Migrations
                     b.HasIndex("RolesID");
 
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.ReportBPM", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("below35")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below40")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below45")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below50")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below60")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ReportBPMs");
+                });
+
+            modelBuilder.Entity("SLeepApnea.Shared.Domain.ReportSpO2", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("below70")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below80")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below85")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below90")
+                        .HasColumnType("int");
+
+                    b.Property<int>("below95")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ReportSpO2s");
                 });
 
             modelBuilder.Entity("SLeepApnea.Shared.Domain.Roles", b =>

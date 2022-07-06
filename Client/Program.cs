@@ -32,7 +32,8 @@ namespace SLeepApnea.Client
 			builder.Services.AddHttpClientInterceptor();
 			builder.Services.AddScoped<HttpInterceptorService>();
 
-			builder.Services.AddApiAuthorization();
+			builder.Services.AddApiAuthorization()
+				.AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
 			await builder.Build().RunAsync();
 		}

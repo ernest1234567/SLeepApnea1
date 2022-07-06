@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Radzen;
 using SLeepApnea.Server.Data;
 using SLeepApnea.Server.Models;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityServer4.Services;
 
 namespace SLeepApnea.Server
 {
@@ -38,9 +40,18 @@ namespace SLeepApnea.Server
 			services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
-
 			services.AddIdentityServer()
-				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+			   .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options => {
+				   options.IdentityResources["openid"].UserClaims.Add("name");
+				   options.ApiResources.Single().UserClaims.Add("name");
+				   options.IdentityResources["openid"].UserClaims.Add("role");
+				   options.ApiResources.Single().UserClaims.Add("role");
+			   });
+
+			services.AddTransient<IProfileService, ProfileService>();
+
+			JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+
 
 			services.AddScoped<DialogService>();
 			services.AddScoped<NotificationService>();

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SLeepApnea.Server.Migrations
 {
-    public partial class name : Migration
+    public partial class roling : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,7 +28,7 @@ namespace SLeepApnea.Server.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Role = table.Column<int>(type: "int", nullable: false),
+                    Roles = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -69,21 +69,6 @@ namespace SLeepApnea.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patients",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Patients", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -104,16 +89,50 @@ namespace SLeepApnea.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Role",
+                name: "ReportBPMs",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleNumber = table.Column<int>(type: "int", nullable: false)
+                    below60 = table.Column<int>(type: "int", nullable: false),
+                    below50 = table.Column<int>(type: "int", nullable: false),
+                    below45 = table.Column<int>(type: "int", nullable: false),
+                    below40 = table.Column<int>(type: "int", nullable: false),
+                    below35 = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.ID);
+                    table.PrimaryKey("PK_ReportBPMs", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReportSpO2s",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    below95 = table.Column<int>(type: "int", nullable: false),
+                    below90 = table.Column<int>(type: "int", nullable: false),
+                    below85 = table.Column<int>(type: "int", nullable: false),
+                    below80 = table.Column<int>(type: "int", nullable: false),
+                    below70 = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReportSpO2s", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roless",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    rolename = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roless", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,6 +242,50 @@ namespace SLeepApnea.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Doctors",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RolesID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Doctors", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Doctors_Roless_RolesID",
+                        column: x => x.RolesID,
+                        principalTable: "Roless",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Patients",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RolesID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patients", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Patients_Roless_RolesID",
+                        column: x => x.RolesID,
+                        principalTable: "Roless",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VitalDatas",
                 columns: table => new
                 {
@@ -234,11 +297,18 @@ namespace SLeepApnea.Server.Migrations
                     BPMCount = table.Column<int>(type: "int", nullable: false),
                     SpO2 = table.Column<int>(type: "int", nullable: false),
                     SpO2Count = table.Column<int>(type: "int", nullable: false),
-                    PatientID = table.Column<int>(type: "int", nullable: true)
+                    PatientID = table.Column<int>(type: "int", nullable: true),
+                    DoctorID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VitalDatas", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_VitalDatas_Doctors_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Doctors",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VitalDatas_Patients_PatientID",
                         column: x => x.PatientID,
@@ -298,6 +368,16 @@ namespace SLeepApnea.Server.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Doctors_RolesID",
+                table: "Doctors",
+                column: "RolesID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patients_RolesID",
+                table: "Patients",
+                column: "RolesID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -311,6 +391,11 @@ namespace SLeepApnea.Server.Migrations
                 name: "IX_PersistedGrants_SubjectId_SessionId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "SessionId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VitalDatas_DoctorID",
+                table: "VitalDatas",
+                column: "DoctorID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VitalDatas_PatientID",
@@ -342,7 +427,10 @@ namespace SLeepApnea.Server.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
-                name: "Role");
+                name: "ReportBPMs");
+
+            migrationBuilder.DropTable(
+                name: "ReportSpO2s");
 
             migrationBuilder.DropTable(
                 name: "VitalDatas");
@@ -354,7 +442,13 @@ namespace SLeepApnea.Server.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Doctors");
+
+            migrationBuilder.DropTable(
                 name: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "Roless");
         }
     }
 }

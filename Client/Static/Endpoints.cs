@@ -14,5 +14,7 @@ namespace SLeepApnea.Client.Static
 		public static readonly string PatientsEndpoint = $"{Prefix}/Patients";
 		public static readonly string DoctorsEndpoint = $"{Prefix}/Doctors";
 		public static readonly string RolessEndpoint = $"{Prefix}/Roles";
+		public static readonly string ReportSpO2sEndpoint = $"{Prefix}/ReportSpO2s";
+		public static readonly string ReportBPMsEndpoint = $"{Prefix}/ReportBPMs";
 	}
 }

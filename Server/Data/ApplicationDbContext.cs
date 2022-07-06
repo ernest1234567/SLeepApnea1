@@ -23,5 +23,7 @@ namespace SLeepApnea.Server.Data
 		public DbSet<Patient> Patients { get; set; }
 
 		public DbSet<Doctor> Doctors { get; set; }
+		public DbSet<ReportBPM> ReportBPMs { get; set; }
+		public DbSet<ReportSpO2> ReportSpO2s { get; set; }
 	}
 }

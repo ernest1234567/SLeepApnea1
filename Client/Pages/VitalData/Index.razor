@@ -27,6 +27,11 @@
 }
 else
 {
+	<AuthorizeView Roles="admin">
+		<NotAuthorized>
+			<span> You are not authorized.</span>
+		</NotAuthorized>
+		<Authorized>
 	<table class="table table-responsive" id="vitalDatasTable">
 		<thead>
 			<tr>
@@ -83,6 +88,8 @@ else
 			}
 		</tbody>
 	</table>
+		</Authorized>
+		</AuthorizeView>
 }
 
 
