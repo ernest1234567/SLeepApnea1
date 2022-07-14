@@ -8,56 +8,69 @@
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12 my-5">
-			
+
 			<Radzen.Blazor.RadzenCard Class="w-100 mb-4">
 				<RadzenLabel Text="SleepApnea:" Style="margin-right: 8px; vertical-align: middle;" />
 				<RadzenDropDown TValue="string" Name="patient" Data="@patients" TextProperty="Name" ValueProperty="Name" @bind-Value="SelectedPatientID" Placeholder="Select..." Class="w100p" AllowFiltering="true" AllowVirtualization="true" />	`
 			</Radzen.Blazor.RadzenCard>
 			<p>@SelectedPatientID</p>
-			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID" >
-				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalDatas" CategoryProperty="Date" Title="SpO2" LineType="Radzen.Blazor.LineType.Dashed" ValueProperty="SpO2" >
-					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Square"  />
+			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
+				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="SpO2" LineType="Radzen.Blazor.LineType.Dashed" ValueProperty="SpO2" >
+					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Square" />
 				</Radzen.Blazor.RadzenLineSeries>
-				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalDatas" CategoryProperty="Date" Title="BPM" ValueProperty="BPM">
+				@*<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Date" Title="BPM" ValueProperty="BPM">
 					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
-				</Radzen.Blazor.RadzenLineSeries>
-				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}"  />
+				</Radzen.Blazor.RadzenLineSeries>*@
+				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}"/>
 				@*<Radzen.Blazor.RadzenValueAxis Formatter="@FormatAsUSD">
 				<Radzen.Blazor.RadzenGridLines Visible="true" />
 			<Radzen.Blazor.RadzenAxisTitle Text="BPM and SpO2 Data" />
 			</Radzen.Blazor.RadzenValueAxis>*@
 			</Radzen.Blazor.RadzenChart>
+			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
+				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="BPM" ValueProperty="BPM">
+					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
+				</Radzen.Blazor.RadzenLineSeries>
+				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}" />
+			</Radzen.Blazor.RadzenChart>
+			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
+				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="Movement" ValueProperty="Movement">
+					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
+				</Radzen.Blazor.RadzenLineSeries>
+				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}" />
+			</Radzen.Blazor.RadzenChart>
+
 		</div>
 	</div>
 </div>
 @code {
-	string patientss = "choose";
-	bool smooth = false;
-	string FormatAsUSD(object value)
-	{
-		return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
-	}
-	private IList<VitalData> vitalDatas;
-	private IList<Patient> patients;
-	protected async override Task OnInitializedAsync()
-	{
-		vitalDatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
-		patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
-		patients.Cast<Patient>();
-	}
-	void OnChange(object value)
-	{
-		var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+    string patientss = "choose";
+    bool smooth = false;
+    string FormatAsUSD(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+    }
+    private IList<VitalData> vitalData;
+    private IList<Patient> patients;
+    protected async override Task OnInitializedAsync()
+    {
+        vitalData = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+        patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
+        patients.Cast<Patient>();
+    }
+    void OnChange(object value)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-		Console.WriteLine($"Value changed to {str}");
-	}
-	//IEnumerable<ColorScheme> colorSchemes = Enum.GetValues(typeof(ColorScheme)).Cast<ColorScheme>();
-	//ColorScheme colorScheme = ColorScheme.Palette;
-	string selectedPatientID;
+        Console.WriteLine($"Value changed to {str}");
+    }
+    //IEnumerable<ColorScheme> colorSchemes = Enum.GetValues(typeof(ColorScheme)).Cast<ColorScheme>();
+    //ColorScheme colorScheme = ColorScheme.Palette;
+    string selectedPatientID;
 
-	string SelectedPatientID
-	{
-		get => selectedPatientID;
-		set { selectedPatientID = value; }
-	}
+    string SelectedPatientID
+    {
+        get => selectedPatientID;
+        set { selectedPatientID = value; }
+    }
 }

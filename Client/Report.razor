@@ -1,0 +1,38 @@
+﻿@page "/report/"
+@inject HttpClient _client
+@using Radzen
+@using Radzen.Blazor
+@using System.Globalization
+
+<h1>Report</h1>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 my-5">
+			<Radzen.Blazor.RadzenChart>
+				<Radzen.Blazor.RadzenBarSeries Data="@vitalData" CategoryProperty="Quarter" Title="BPM" ValueProperty="_100to95" />
+				@*<RadzenValueAxis Formatter="@FormatAsUSD">*@
+				<!--<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Revenue in USD" />
+				</RadzenValueAxis>-->
+				<Radzen.Blazor.RadzenBarOptions Radius="5" />
+			</Radzen.Blazor.RadzenChart>
+			<Radzen.Blazor.RadzenChart>
+				<Radzen.Blazor.RadzenBarSeries Data="@vitalData" CategoryProperty="Quarter" Title="SpO2" ValueProperty="_99" />
+				@*<RadzenValueAxis Formatter="@FormatAsUSD">*@
+				<!--<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Revenue in USD" />
+				</RadzenValueAxis>-->
+				<Radzen.Blazor.RadzenBarOptions Radius="5" />
+			</Radzen.Blazor.RadzenChart>
+		</div>
+	</div>
+</div>
+
+
+@code {
+	private IList<VitalData> vitalData;
+	protected async override Task OnInitializedAsync()
+	{
+		vitalData = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+	}
+}

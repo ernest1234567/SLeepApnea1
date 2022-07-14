@@ -1,0 +1,177 @@
+﻿@page "/BPMdata/"
+@inject HttpClient _client
+@inject HttpInterceptorService _interceptor
+
+<h3>CountData</h3>
+<h4>Choose date:</h4>
+
+<input class="form-control" type="date" format-value="yyyy-mm-dd" @bind="@inputValue" />
+
+@if (vitaldatas == null)
+{
+	<div class="alert alert-info">Loading VitalDatas...</div>
+}
+else
+{
+	<table class="table table-responsive" id="rolessTable">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Count100</th>
+				<th>Count95</th>
+				<th>Count90</th>
+				<th>Count85</th>
+				<th>Count80</th>
+				<th>Count75</th>
+				<th>Count70</th>
+				<th>Count65</th>
+				<th>Count60</th>
+				<th>Count55</th>
+				<th>Count50</th>
+				<th>Count45</th>
+				<th>Count40</th>
+				<th>Count35</th>
+				<th>Count30</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var vitaldata in vitaldatas)
+			{
+				@*@if (inputValue.ToString("yyyy-MM-dd") != vitaldata.Date)
+						{
+						BPMCount100 = 0;
+						BPMCount95 = 0;
+						BPMCount90 = 0;
+						BPMCount85 = 0;
+						BPMCount80 = 0;
+						BPMCount75 = 0;
+						BPMCount70 = 0;
+						BPMCount65 = 0;
+						BPMCount60 = 0;
+						BPMCount55 = 0;
+						BPMCount50 = 0;
+						BPMCount45 = 0;
+						BPMCount40 = 0;
+						BPMCount35 = 0;
+						BPMCount30 = 0;
+					}*@
+				@if (inputValue.ToString("yyyy-MM-dd") == vitaldata.Date)
+				//if (vitaldata.Date == date
+
+				{
+					<tr>
+						@if (vitaldata.BPM <= 100 && vitaldata.BPM > 95)
+						{
+							BPMCount100++;
+							BPMCount100.ToString().
+						}
+						@if (vitaldata.BPM <= 95 && vitaldata.BPM > 90)
+						{
+							BPMCount95++;
+						}
+						@if (vitaldata.BPM <= 90 && vitaldata.BPM > 85)
+						{
+							BPMCount90++;
+						}
+						@if (vitaldata.BPM <= 85 && vitaldata.BPM > 80)
+						{
+							BPMCount85++;
+						}
+						@if (vitaldata.BPM <= 80 && vitaldata.BPM > 75)
+						{
+							BPMCount80++;
+						}
+						@if (vitaldata.BPM <= 75 && vitaldata.BPM > 70)
+						{
+							BPMCount75++;
+						}
+						@if (vitaldata.BPM <= 70 && vitaldata.BPM > 65)
+						{
+							BPMCount70++;
+						}
+						@if (vitaldata.BPM <= 65 && vitaldata.BPM > 60)
+						{
+							BPMCount65++;
+						}
+						@if (vitaldata.BPM <= 60 && vitaldata.BPM > 55)
+						{
+							BPMCount60++;
+						}
+						@if (vitaldata.BPM <= 55 && vitaldata.BPM > 50)
+						{
+							BPMCount55++;
+						}
+						@if (vitaldata.BPM <= 50 && vitaldata.BPM > 45)
+						{
+							BPMCount50++;
+						}
+						@if (vitaldata.BPM <= 45 && vitaldata.BPM > 40)
+						{
+							BPMCount45++;
+						}
+						@if (vitaldata.BPM <= 40 && vitaldata.BPM > 35)
+						{
+							BPMCount40++;
+						}
+						@if (vitaldata.BPM <= 35 && vitaldata.BPM > 30)
+						{
+							BPMCount35++;
+						}
+						@if (vitaldata.BPM <= 30 && vitaldata.BPM > 25)
+						{
+							BPMCount30++;
+						}
+
+					</tr>
+				}
+			}
+		<td>@inputValue.ToString("yyyy-MM-dd")</td>
+		<td>@BPMCount100</td>
+		<td>@BPMCount95</td>
+		<td>@BPMCount90</td>
+		<td>@BPMCount85</td>
+		<td>@BPMCount80</td>
+		<td>@BPMCount75</td>
+		<td>@BPMCount70</td>
+		<td>@BPMCount65</td>
+		<td>@BPMCount60</td>
+		<td>@BPMCount55</td>
+		<td>@BPMCount50</td>
+		<td>@BPMCount45</td>
+		<td>@BPMCount40</td>
+		<td>@BPMCount35</td>
+		<td>@BPMCount30</td>
+		</tbody>
+	</table>
+	
+}
+
+@code {
+	public string date = System.DateTime.Today.ToString("yyyy-MM-dd");
+	public int BPMCount100 = 0;
+	public int BPMCount95 = 0;
+	public int BPMCount90 = 0;
+	public int BPMCount85 = 0;
+	public int BPMCount80 = 0;
+	public int BPMCount75 = 0;
+	public int BPMCount70 = 0;
+	public int BPMCount65 = 0;
+	public int BPMCount60 = 0;
+	public int BPMCount55 = 0;
+	public int BPMCount50 = 0;
+	public int BPMCount45 = 0;
+	public int BPMCount40 = 0;
+	public int BPMCount35 = 0;
+	public int BPMCount30 = 0;
+	private List<VitalData> vitaldatas;
+	protected async override Task OnInitializedAsync()
+	{
+		_interceptor.MonitorEvent();
+		vitaldatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+	}
+	private DateTime inputValue { get; set; }
+	private void OnInputValue(ChangeEventArgs changeEvent)
+	{
+		inputValue = (DateTime)changeEvent.Value;
+	}
+}

@@ -8,11 +8,10 @@ namespace SLeepApnea.Shared.Domain
 {
 	public class ReportSpO2 : BaseDomainModel
 	{
-		public int below95 { get; set; }
-		public int below90 { get; set; }
-		public int below85 { get; set; }
-		public int below80 { get; set; }
-		public int below70 { get; set; }
+		public int _99 { get; set; }
+		public int _98 { get; set; }
+		public int _97 { get; set; }
+		public int _96 { get; set; }
 
 	}
 }

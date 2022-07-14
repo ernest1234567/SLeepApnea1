@@ -8,10 +8,15 @@ namespace SLeepApnea.Shared.Domain
 {
 	public class ReportBPM : BaseDomainModel
 	{
-		public int below60 { get; set; }
-		public int below50 { get; set; }
-		public int below45 { get; set; }
-		public int below40 { get; set; }
-		public int below35 { get; set; }
+		public int _100to95 { get; set; }
+		public int _95to90 { get; set; }
+		public int _90to85 { get; set; }
+		public int _85to80 { get; set; }
+		public int _80to75 { get; set; }
+		public int _75to70 { get; set; }
+		public int _70to65 { get; set; }
+		public int _65to60 { get; set; }
+		
+
 	}
 }

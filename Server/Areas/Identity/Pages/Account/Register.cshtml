@@ -39,8 +39,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Input.Roles"></label>
-                <input asp-for="Input.Roles" class="form-control" />
-                <span asp-validation-for="Input.Roles" class="text-danger"></span>
+                <input asp-for="Input.Roles" min="1"max="2" class="form-control" />
+                <span asp-validation-for="Input.Roles"  class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>

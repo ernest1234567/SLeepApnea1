@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Pages\VitalData\Create.razor" />
+    <None Include="Pages\VitalData\Edit.razor" />
+    <None Include="Pages\VitalData\FormComponent.razor" />
+    <None Include="Pages\VitalData\Index.razor" />
+    <None Include="Pages\VitalData\View.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.11" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.11" />

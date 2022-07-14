@@ -1,130 +1,84 @@
 ﻿@page "/vitalDatas/"
-@*@page "/vitalDatas/{id:int}"*@
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
-@using System.Data.SqlClient
-@using Microsoft.AspNetCore.Components
 @inject HttpClient _client
 @inject IJSRuntime js
 @inject HttpInterceptorService _interceptor
 @implements IDisposable
 @attribute [Authorize]
 
-<h3 class="card-title">Vital Data</h3>
+
+<h3 class="card-title">VitalDatas</h3>
 <br />
 
-<a href="/vitalDatas/create" class="btn btn-secondary">
+@*<a href="/vitalDatas/create" class="btn btn-secondary">
 	<span class="oi oi-plus"></span>
-	Create New VitalDatas
-</a>
-<br />
-<br />
+	Create New VitalData
+</a>*@
+@*<br />
+<br />*@
 
 
-@if (vitalDatas == null)
+
+@if (vitaldatas == null)
 {
-	<div class="alert alert-info">Loading VitalDatas...</div>
+	<div class="alert alert-info">Loading VitalDatas...</div> 
 }
 else
 {
-	<AuthorizeView Roles="admin">
-		<NotAuthorized>
-			<span> You are not authorized.</span>
-		</NotAuthorized>
-		<Authorized>
-	<table class="table table-responsive" id="vitalDatasTable">
+	<table class="table table-responsive" id="rolessTable">
 		<thead>
 			<tr>
-				<th>Patient Name</th>
-				<th>Doctor Name</th>
-				<th>Date</th>
-				@*<th>Time</th>*@
 				<th>BPM</th>
-				@*<th>BPMCount</th>*@
-				<th>SpO2</th>
-				@*<th>SpO2Count</th>*@
-				<th>Actions</th>
+				<th>SPO2</th>
+				<th>Movement</th>
+				<th>Date</th>
+				<th>Time</th>
+				<th>Count</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var vitalData in vitalDatas)
-			{
+		@foreach (var vitaldata in vitaldatas)
+		{
 			<tr>
-				@foreach (var patient in patients)
-				{
-					if (vitalData.PatientID == patient.ID)
-					{
-						<td>@patient.Name</td>
-					}
-				}
-				@foreach (var doctor in doctors)
-				{
-					if (vitalData.DoctorID == doctor.ID)
-					{
-						<td>@doctor.Name</td>
-					}
-				}
-				<td>@vitalData.Date</td>
-				@*<td>@vitalData.Time</td>*@
-				<td>@vitalData.BPM</td>
-				@*<td>@vitalData.BPMCount</td>*@
-				<td>@vitalData.SpO2</td>
-				@*<td>@vitalData.SpO2Count</td>*@
-				<td>
-					<a href="/vitalDatas/view/@vitalData.ID" class="btn btn-primary">
-						<span class="oi oi-book"></span>
-					</a>
-					<a href="/vitalDatas/edit/@vitalData.ID" class="btn btn-warning">
-						<span class="oi oi-pencil"></span>
-					</a>
-					<button class="btn btn-danger" @onclick="@(() => Delete(vitalData.ID))">
-						<span class="oi oi-delete"></span>
-					</button>
-				</td>
-
-
-			</tr>
-
-			}
-		</tbody>
-	</table>
-		</Authorized>
-		</AuthorizeView>
+				<td>@vitaldata.BPM</td>
+				<td>@vitaldata.SpO2</td>
+				<td>@vitaldata.Movement</td>
+				<td>@vitaldata.Date</td>
+				<td>@vitaldata.Time</td>		
+		</tr>
+		}
+	</tbody>
+</table>
 }
 
 
-@code {
-	[CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-	public int id { get; set; }
-	private IList<VitalData> vitalDatas;
-	private IList<Patient> patients;
-	private IList<Doctor> doctors;
+@code 
+{
+	private List<VitalData> vitaldatas;
 	protected async override Task OnInitializedAsync()
 	{
-		vitalDatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
-		patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
-		doctors = await _client.GetFromJsonAsync<List<Doctor>>("api/Doctors");
+		_interceptor.MonitorEvent();
+		vitaldatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
 	}
 
 	protected async override Task OnAfterRenderAsync(bool firstRender)
 	{
-		await js.InvokeVoidAsync("AddDataTable", "#vitalDatasTable");
+		await js.InvokeVoidAsync("AddDataTable", "#vitaldatasTable");
 	}
 
 	public void Dispose()
 	{
-		js.InvokeVoidAsync("DataTablesDispose", "#vitalDatasTable");
+		js.InvokeVoidAsync("DataTablesDispose", "#vitaldatasTable");
 	}
-
-	async Task Delete(int vitalDataId)
+	async Task Delete(int vitaldataId)
 	{
-		var vitalData = vitalDatas.First(q => q.ID == vitalDataId);
-		var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {vitalData.Date}?");
+		var vitaldata = vitaldatas.First(q => q.ID == vitaldataId);
+		var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {vitaldata.ID}?");
 		if (confirm)
 		{
-			await _client.DeleteAsync($"api/vitalDatas/{vitalDataId}");
+			await _client.DeleteAsync($"api/roles/{vitaldataId}");
 			await OnInitializedAsync();
 		}
 	}
-
+	[Parameter] public VitalData vitalData { get; set; }
 }
