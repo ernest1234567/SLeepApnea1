@@ -37,33 +37,13 @@ else
 		<tbody>
 			@foreach (var vitaldata in vitaldatas)
 			{
-				@*@if (inputValue.ToString("yyyy-MM-dd") != vitaldata.Date)
-						{
-						BPMCount100 = 0;
-						BPMCount95 = 0;
-						BPMCount90 = 0;
-						BPMCount85 = 0;
-						BPMCount80 = 0;
-						BPMCount75 = 0;
-						BPMCount70 = 0;
-						BPMCount65 = 0;
-						BPMCount60 = 0;
-						BPMCount55 = 0;
-						BPMCount50 = 0;
-						BPMCount45 = 0;
-						BPMCount40 = 0;
-						BPMCount35 = 0;
-						BPMCount30 = 0;
-					}*@
 				@if (inputValue.ToString("yyyy-MM-dd") == vitaldata.Date)
 				//if (vitaldata.Date == date
-
 				{
 					<tr>
 						@if (vitaldata.BPM <= 100 && vitaldata.BPM > 95)
 						{
 							BPMCount100++;
-							BPMCount100.ToString().
 						}
 						@if (vitaldata.BPM <= 95 && vitaldata.BPM > 90)
 						{
@@ -121,34 +101,77 @@ else
 						{
 							BPMCount30++;
 						}
-
 					</tr>
+					BPMCount100 = 0;
+					BPMCount95 = 0;
+					BPMCount90 = 0;
+					BPMCount85 = 0;
+					BPMCount80 = 0;
+					BPMCount75 = 0;
+					BPMCount70 = 0;
+					BPMCount65 = 0;
+					BPMCount60 = 0;
+					BPMCount55 = 0;
+					BPMCount50 = 0;
+					BPMCount45 = 0;
+					BPMCount40 = 0;
+					BPMCount35 = 0;
+					BPMCount30 = 0;
 				}
 			}
 		<td>@inputValue.ToString("yyyy-MM-dd")</td>
-		<td>@BPMCount100</td>
-		<td>@BPMCount95</td>
-		<td>@BPMCount90</td>
-		<td>@BPMCount85</td>
-		<td>@BPMCount80</td>
-		<td>@BPMCount75</td>
-		<td>@BPMCount70</td>
-		<td>@BPMCount65</td>
-		<td>@BPMCount60</td>
-		<td>@BPMCount55</td>
-		<td>@BPMCount50</td>
-		<td>@BPMCount45</td>
-		<td>@BPMCount40</td>
-		<td>@BPMCount35</td>
-		<td>@BPMCount30</td>
+		<td>@BPMCounts100</td>
+		<td>@BPMCounts95</td>
+		<td>@BPMCounts90</td>
+		<td>@BPMCounts85</td>
+		<td>@BPMCounts80</td>
+		<td>@BPMCounts75</td>
+		<td>@BPMCounts70</td>
+		<td>@BPMCounts65</td>
+		<td>@BPMCounts60</td>
+		<td>@BPMCounts55</td>
+		<td>@BPMCounts50</td>
+		<td>@BPMCounts45</td>
+		<td>@BPMCounts40</td>
+		<td>@BPMCounts35</td>
+		<td>@BPMCounts30</td>
 		</tbody>
 	</table>
-	
+	BPMCounts100 = BPMCount100;
+	BPMCounts95 = BPMCount95;
+	BPMCounts90 = BPMCount90;
+	BPMCounts85 = BPMCount85;
+	BPMCounts80 = BPMCount80;
+	BPMCounts75 = BPMCount75;
+	BPMCounts70 = BPMCount70;
+	BPMCounts65 = BPMCount65;
+	BPMCounts60 = BPMCount60;
+	BPMCounts55 = BPMCount55;
+	BPMCounts50 = BPMCount50;
+	BPMCounts45 = BPMCount45;
+	BPMCounts40 = BPMCount40;
+	BPMCounts35 = BPMCount35;
+	BPMCounts30 = BPMCount30;
+
 }
 
 @code {
-	public string date = System.DateTime.Today.ToString("yyyy-MM-dd");
 	public int BPMCount100 = 0;
+	public int BPMCounts100 = 0;
+	public int BPMCounts95 = 0;
+	public int BPMCounts90 = 0;
+	public int BPMCounts85 = 0;
+	public int BPMCounts80 = 0;
+	public int BPMCounts75 = 0;
+	public int BPMCounts70 = 0;
+	public int BPMCounts65 = 0;
+	public int BPMCounts60 = 0;
+	public int BPMCounts55 = 0;
+	public int BPMCounts50 = 0;
+	public int BPMCounts45 = 0;
+	public int BPMCounts40 = 0;
+	public int BPMCounts35 = 0;
+	public int BPMCounts30 = 0;
 	public int BPMCount95 = 0;
 	public int BPMCount90 = 0;
 	public int BPMCount85 = 0;
