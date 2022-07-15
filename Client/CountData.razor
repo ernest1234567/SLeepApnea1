@@ -155,49 +155,108 @@ else
 	BPMCount40 = 0;
 	BPMCount35 = 0;
 	BPMCount30 = 0;
-	
+	<h1>Report</h1>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 my-5">
+				<Radzen.Blazor.RadzenChart>
+					<Radzen.Blazor.RadzenBarSeries Data="@BPM" CategoryProperty="BPM" Title="BPMCount" ValueProperty="BPMCount" />
+					@*<RadzenValueAxis Formatter="@FormatAsUSD">*@
+					<!--<RadzenGridLines Visible="true" />
+						<RadzenAxisTitle Text="Revenue in USD" />
+					</RadzenValueAxis>-->
+					<Radzen.Blazor.RadzenBarOptions Radius="5" />
+				</Radzen.Blazor.RadzenChart>
+			</div>
+		</div>
+	</div>
 }
 
 @code {
 	class DataItem
 	{
-		public int BPMCountss100 { get; set; }
-		public int BPMCountss95 { get; set; }
-		public int BPMCountss90 { get; set; }
-		public int BPMCountss85 { get; set; }
-		public int BPMCountss80 { get; set; }
-		public int BPMCountss75 { get; set; }
-		public int BPMCountss70 { get; set; }
-		public int BPMCountss65 { get; set; }
-		public int BPMCountss60 { get; set; }
-		public int BPMCountss55 { get; set; }
-		public int BPMCountss50 { get; set; }
-		public int BPMCountss45 { get; set; }
-		public int BPMCountss40 { get; set; }
-		public int BPMCountss35 { get; set; }
-		public int BPMCountss30 { get; set; }
+		public string BPM { get; set; }
+		public int BPMCount { get; set; }
 	}
 	DataItem[] BPM = new DataItem[]
 	{
 		new DataItem
 		{
-			BPMCountss100 = BPMCounts100,
-			BPMCountss95 = BPMCounts95,
-			BPMCountss90 = BPMCounts90,
-			BPMCountss85 = BPMCounts85,
-			BPMCountss80 = BPMCounts80,
-			BPMCountss75 = BPMCounts75,
-			BPMCountss70 = BPMCounts70,
-			BPMCountss65 = BPMCounts65,
-			BPMCountss60 = BPMCounts60,
-			BPMCountss55 = BPMCounts55,
-			BPMCountss50 = BPMCounts50,
-			BPMCountss45 = BPMCounts45,
-			BPMCountss40 = BPMCounts40,
-			BPMCountss35 = BPMCounts35,
-			BPMCountss30 = BPMCounts30
-		}
-			};
+			BPM = "BPM100",
+			BPMCount = BPMCounts100,
+		},
+		new DataItem
+		{
+			BPM = "BPM95",
+			BPMCount = BPMCounts95,
+		},
+		new DataItem
+		{
+			BPM = "BPM90",
+			BPMCount = BPMCounts90,
+		},
+		new DataItem
+		{
+			BPM = "BPM85",
+			BPMCount = BPMCounts85,
+		},
+		new DataItem
+		{
+			BPM = "BPM80",
+			BPMCount = BPMCounts80,
+		},
+		new DataItem
+		{
+			BPM = "BPM75",
+			BPMCount = BPMCounts75,
+		},
+		new DataItem
+		{
+			BPM = "BPM70",
+			BPMCount = BPMCounts70,
+		},
+		new DataItem
+		{
+			BPM = "BPM65",
+			BPMCount = BPMCounts65,
+		},
+		new DataItem
+		{
+			BPM = "BPM60",
+			BPMCount = BPMCounts60,
+		},
+		new DataItem
+		{
+			BPM = "BPM55",
+			BPMCount = BPMCounts55,
+		},
+		new DataItem
+		{
+			BPM = "BPM50",
+			BPMCount = BPMCounts50,
+		},
+		new DataItem
+		{
+			BPM = "BPM45",
+			BPMCount = BPMCounts45,
+		},
+		new DataItem
+		{
+			BPM = "BPM40",
+			BPMCount = BPMCounts40,
+		},
+		new DataItem
+		{
+			BPM = "BPM35",
+			BPMCount = BPMCounts35,
+		},
+		new DataItem
+		{
+			BPM = "BPM30",
+			BPMCount = BPMCounts30,
+		},
+
+					};
 	public static int BPMCounts100 = 0;
 	public static int BPMCounts95 = 0;
 	public static int BPMCounts90 = 0;
