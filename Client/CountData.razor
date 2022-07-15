@@ -17,21 +17,21 @@ else
 		<thead>
 			<tr>
 				<th>Date</th>
-				<th>Count100</th>
-				<th>Count95</th>
-				<th>Count90</th>
-				<th>Count85</th>
-				<th>Count80</th>
-				<th>Count75</th>
-				<th>Count70</th>
-				<th>Count65</th>
-				<th>Count60</th>
-				<th>Count55</th>
-				<th>Count50</th>
-				<th>Count45</th>
-				<th>Count40</th>
-				<th>Count35</th>
-				<th>Count30</th>
+				<th>Count 96-100</th>
+				<th>Count 91-95</th>
+				<th>Count 86-90</th>
+				<th>Count 81-85</th>
+				<th>Count 76-80</th>
+				<th>Count 71-75</th>
+				<th>Count 66-70</th>
+				<th>Count 61-65</th>
+				<th>Count 56-60</th>
+				<th>Count 51-55</th>
+				<th>Count 46-50</th>
+				<th>Count 41-45</th>
+				<th>Count 36-40</th>
+				<th>Count 31-35</th>
+				<th>Count 26-30</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -102,22 +102,22 @@ else
 							BPMCount30++;
 						}
 					</tr>
-					BPMCount100 = 0;
-					BPMCount95 = 0;
-					BPMCount90 = 0;
-					BPMCount85 = 0;
-					BPMCount80 = 0;
-					BPMCount75 = 0;
-					BPMCount70 = 0;
-					BPMCount65 = 0;
-					BPMCount60 = 0;
-					BPMCount55 = 0;
-					BPMCount50 = 0;
-					BPMCount45 = 0;
-					BPMCount40 = 0;
-					BPMCount35 = 0;
-					BPMCount30 = 0;
 				}
+				BPMCounts100 = BPMCount100;
+				BPMCounts95 = BPMCount95;
+				BPMCounts90 = BPMCount90;
+				BPMCounts85 = BPMCount85;
+				BPMCounts80 = BPMCount80;
+				BPMCounts75 = BPMCount75;
+				BPMCounts70 = BPMCount70;
+				BPMCounts65 = BPMCount65;
+				BPMCounts60 = BPMCount60;
+				BPMCounts55 = BPMCount55;
+				BPMCounts50 = BPMCount50;
+				BPMCounts45 = BPMCount45;
+				BPMCounts40 = BPMCount40;
+				BPMCounts35 = BPMCount35;
+				BPMCounts30 = BPMCount30;
 			}
 		<td>@inputValue.ToString("yyyy-MM-dd")</td>
 		<td>@BPMCounts100</td>
@@ -137,26 +137,25 @@ else
 		<td>@BPMCounts30</td>
 		</tbody>
 	</table>
-	BPMCounts100 = BPMCount100;
-	BPMCounts95 = BPMCount95;
-	BPMCounts90 = BPMCount90;
-	BPMCounts85 = BPMCount85;
-	BPMCounts80 = BPMCount80;
-	BPMCounts75 = BPMCount75;
-	BPMCounts70 = BPMCount70;
-	BPMCounts65 = BPMCount65;
-	BPMCounts60 = BPMCount60;
-	BPMCounts55 = BPMCount55;
-	BPMCounts50 = BPMCount50;
-	BPMCounts45 = BPMCount45;
-	BPMCounts40 = BPMCount40;
-	BPMCounts35 = BPMCount35;
-	BPMCounts30 = BPMCount30;
+	BPMCount100 = 0;
+	BPMCount95 = 0;
+	BPMCount90 = 0;
+	BPMCount85 = 0;
+	BPMCount80 = 0;
+	BPMCount75 = 0;
+	BPMCount70 = 0;
+	BPMCount65 = 0;
+	BPMCount60 = 0;
+	BPMCount55 = 0;
+	BPMCount50 = 0;
+	BPMCount45 = 0;
+	BPMCount40 = 0;
+	BPMCount35 = 0;
+	BPMCount30 = 0;
 
 }
 
 @code {
-	public int BPMCount100 = 0;
 	public int BPMCounts100 = 0;
 	public int BPMCounts95 = 0;
 	public int BPMCounts90 = 0;
@@ -172,6 +171,7 @@ else
 	public int BPMCounts40 = 0;
 	public int BPMCounts35 = 0;
 	public int BPMCounts30 = 0;
+	public int BPMCount100 = 0;
 	public int BPMCount95 = 0;
 	public int BPMCount90 = 0;
 	public int BPMCount85 = 0;
