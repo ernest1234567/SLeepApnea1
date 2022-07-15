@@ -1,6 +1,9 @@
 ﻿@page "/BPMdata/"
 @inject HttpClient _client
 @inject HttpInterceptorService _interceptor
+@using Radzen
+@using Radzen.Blazor
+@using System.Globalization
 
 <h3>CountData</h3>
 <h4>Choose date:</h4>
@@ -152,40 +155,79 @@ else
 	BPMCount40 = 0;
 	BPMCount35 = 0;
 	BPMCount30 = 0;
-
+	
 }
 
 @code {
-	public int BPMCounts100 = 0;
-	public int BPMCounts95 = 0;
-	public int BPMCounts90 = 0;
-	public int BPMCounts85 = 0;
-	public int BPMCounts80 = 0;
-	public int BPMCounts75 = 0;
-	public int BPMCounts70 = 0;
-	public int BPMCounts65 = 0;
-	public int BPMCounts60 = 0;
-	public int BPMCounts55 = 0;
-	public int BPMCounts50 = 0;
-	public int BPMCounts45 = 0;
-	public int BPMCounts40 = 0;
-	public int BPMCounts35 = 0;
-	public int BPMCounts30 = 0;
-	public int BPMCount100 = 0;
-	public int BPMCount95 = 0;
-	public int BPMCount90 = 0;
-	public int BPMCount85 = 0;
-	public int BPMCount80 = 0;
-	public int BPMCount75 = 0;
-	public int BPMCount70 = 0;
-	public int BPMCount65 = 0;
-	public int BPMCount60 = 0;
-	public int BPMCount55 = 0;
-	public int BPMCount50 = 0;
-	public int BPMCount45 = 0;
-	public int BPMCount40 = 0;
-	public int BPMCount35 = 0;
-	public int BPMCount30 = 0;
+	class DataItem
+	{
+		public int BPMCountss100 { get; set; }
+		public int BPMCountss95 { get; set; }
+		public int BPMCountss90 { get; set; }
+		public int BPMCountss85 { get; set; }
+		public int BPMCountss80 { get; set; }
+		public int BPMCountss75 { get; set; }
+		public int BPMCountss70 { get; set; }
+		public int BPMCountss65 { get; set; }
+		public int BPMCountss60 { get; set; }
+		public int BPMCountss55 { get; set; }
+		public int BPMCountss50 { get; set; }
+		public int BPMCountss45 { get; set; }
+		public int BPMCountss40 { get; set; }
+		public int BPMCountss35 { get; set; }
+		public int BPMCountss30 { get; set; }
+	}
+	DataItem[] BPM = new DataItem[]
+	{
+		new DataItem
+		{
+			BPMCountss100 = BPMCounts100,
+			BPMCountss95 = BPMCounts95,
+			BPMCountss90 = BPMCounts90,
+			BPMCountss85 = BPMCounts85,
+			BPMCountss80 = BPMCounts80,
+			BPMCountss75 = BPMCounts75,
+			BPMCountss70 = BPMCounts70,
+			BPMCountss65 = BPMCounts65,
+			BPMCountss60 = BPMCounts60,
+			BPMCountss55 = BPMCounts55,
+			BPMCountss50 = BPMCounts50,
+			BPMCountss45 = BPMCounts45,
+			BPMCountss40 = BPMCounts40,
+			BPMCountss35 = BPMCounts35,
+			BPMCountss30 = BPMCounts30
+		}
+			};
+	public static int BPMCounts100 = 0;
+	public static int BPMCounts95 = 0;
+	public static int BPMCounts90 = 0;
+	public static int BPMCounts85 = 0;
+	public static int BPMCounts80 = 0;
+	public static int BPMCounts75 = 0;
+	public static int BPMCounts70 = 0;
+	public static int BPMCounts65 = 0;
+	public static int BPMCounts60 = 0;
+	public static int BPMCounts55 = 0;
+	public static int BPMCounts50 = 0;
+	public static int BPMCounts45 = 0;
+	public static int BPMCounts40 = 0;
+	public static int BPMCounts35 = 0;
+	public static int BPMCounts30 = 0;
+	public static int BPMCount100 = 0;
+	public static int BPMCount95 = 0;
+	public static int BPMCount90 = 0;
+	public static int BPMCount85 = 0;
+	public static int BPMCount80 = 0;
+	public static int BPMCount75 = 0;
+	public static int BPMCount70 = 0;
+	public static int BPMCount65 = 0;
+	public static int BPMCount60 = 0;
+	public static int BPMCount55 = 0;
+	public static int BPMCount50 = 0;
+	public static int BPMCount45 = 0;
+	public static int BPMCount40 = 0;
+	public static int BPMCount35 = 0;
+	public static int BPMCount30 = 0;
 	private List<VitalData> vitaldatas;
 	protected async override Task OnInitializedAsync()
 	{
