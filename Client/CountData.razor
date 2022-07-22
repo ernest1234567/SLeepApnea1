@@ -17,6 +17,7 @@
 <input class="form-control" type="date" format-value="yyyy-mm-dd" @bind="@inputValue" />
 <br>
 <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
+<button class="btn btn-primary" @onclick="@Print">Print Graph PDF</button>
 @*<button class="btn btn-primary">
 			<a href="/hospital.jpg" download="data.jpg" target="_top" >
 				download
@@ -157,7 +158,7 @@ else
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 my-5">
-				<Radzen.Blazor.RadzenChart @ref="@myChart">
+				<Radzen.Blazor.RadzenChart @ref="@myChart" >
 					<Radzen.Blazor.RadzenBarSeries Data="@BPMs" CategoryProperty="BPM" Title="BPMCount" ValueProperty="BPMCount" />
 					@*<RadzenValueAxis Formatter="@FormatAsUSD">*@
 					<!--<RadzenGridLines Visible="true" />
@@ -200,7 +201,7 @@ else
 	{
 		if (counting == 0)
 		{
-			BPMs.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), BPM = "BPM96-100", BPMCount = BPMCounts100 });
+			BPMs.Add(new DataItem { Date = inputValue.ToString("yyyy-MM-dd"), BPM = "BPM96-100", BPMCount = BPMCounts100 });
 			BPMs.Add(new DataItem { Date = inputValue.ToString("yyyy-MM-dd"), BPM = "BPM91-95", BPMCount = BPMCounts95 });
 			BPMs.Add(new DataItem { Date = inputValue.ToString("yyyy-MM-dd"), BPM = "BPM86-90", BPMCount = BPMCounts90 });
 			BPMs.Add(new DataItem { Date = inputValue.ToString("yyyy-MM-dd"), BPM = "BPM81-85", BPMCount = BPMCounts85 });
@@ -399,6 +400,8 @@ else
 		JSRuntime.SaveAs("Sample.pdf", memoryStream.ToArray());
 
 	}
-}
-
+	private async Task Print()
+	{
+		await JSRuntime.InvokeVoidAsync("printInvoke");
+	}
 }

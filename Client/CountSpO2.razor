@@ -17,6 +17,7 @@
 <input class="form-control" type="date" format-value="yyyy-mm-dd" @bind="@inputValue" />
 <br>
 <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
+<button class="btn btn-primary" @onclick="@Print">Print Graph PDF</button>
 
 @if (vitaldatas == null)
 {
@@ -243,5 +244,9 @@ else
 		// Download the PDF document
 		JSRuntime.SaveAs("Sample.pdf", memoryStream.ToArray());
 
+	}
+	private async Task Print()
+	{
+		await JSRuntime.InvokeVoidAsync("printInvoke");
 	}
 }

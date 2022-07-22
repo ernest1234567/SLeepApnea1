@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SLeepApnea.Client.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using Syncfusion.Blazor;
 
 namespace SLeepApnea.Client
 {
@@ -34,6 +35,7 @@ namespace SLeepApnea.Client
 
 			builder.Services.AddApiAuthorization()
 				.AddAccountClaimsPrincipalFactory<CustomUserFactory>();
+			builder.Services.AddSyncfusionBlazor(options => { options.IgnoreScriptIsolation = true; });
 
 			await builder.Build().RunAsync();
 		}

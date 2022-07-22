@@ -14,6 +14,7 @@
 <h1>BPM and Sp02 Data</h1>
 <br>
 <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
+<button class="btn btn-primary" @onclick="@Print">Print Graph PDF</button>
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12 my-5">
@@ -138,6 +139,10 @@
 		// Download the PDF document
 		JSRuntime.SaveAs("Sample.pdf", memoryStream.ToArray());
 
+	}
+	private async Task Print()
+	{
+		await JSRuntime.InvokeVoidAsync("printInvoke");
 	}
 
 }
