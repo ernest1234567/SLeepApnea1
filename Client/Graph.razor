@@ -1,10 +1,19 @@
 ﻿@page "/graph/"
 @inject HttpClient _client
+@inject HttpInterceptorService _interceptor
 @using Radzen
+@inject IJSRuntime JSRuntime
 @using Radzen.Blazor
 @using System.Globalization
+@using Syncfusion.Pdf
+@using Syncfusion.Pdf.Grid;
+@using Syncfusion.Drawing;
+@using Syncfusion.Pdf.Graphics;
+@using System.IO;
 
 <h1>BPM and Sp02 Data</h1>
+<br>
+<button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12 my-5">
@@ -14,63 +23,121 @@
 				<RadzenDropDown TValue="string" Name="patient" Data="@patients" TextProperty="Name" ValueProperty="Name" @bind-Value="SelectedPatientID" Placeholder="Select..." Class="w100p" AllowFiltering="true" AllowVirtualization="true" />	`
 			</Radzen.Blazor.RadzenCard>
 			<p>@SelectedPatientID</p>
-			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
+			<!--<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
 				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="SpO2" LineType="Radzen.Blazor.LineType.Dashed" ValueProperty="SpO2" >
 					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Square" />
-				</Radzen.Blazor.RadzenLineSeries>
-				@*<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Date" Title="BPM" ValueProperty="BPM">
+				</Radzen.Blazor.RadzenLineSeries>-->
+			@*<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Date" Title="BPM" ValueProperty="BPM">
 					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
 				</Radzen.Blazor.RadzenLineSeries>*@
-				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}"/>
-				@*<Radzen.Blazor.RadzenValueAxis Formatter="@FormatAsUSD">
-				<Radzen.Blazor.RadzenGridLines Visible="true" />
-			<Radzen.Blazor.RadzenAxisTitle Text="BPM and SpO2 Data" />
-			</Radzen.Blazor.RadzenValueAxis>*@
-			</Radzen.Blazor.RadzenChart>
-			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
-				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="BPM" ValueProperty="BPM">
-					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
-				</Radzen.Blazor.RadzenLineSeries>
-				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}" />
-			</Radzen.Blazor.RadzenChart>
-			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
+			<!--<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}"/>-->
+			@*<Radzen.Blazor.RadzenValueAxis Formatter="@FormatAsUSD">
+					<Radzen.Blazor.RadzenGridLines Visible="true" />
+				<Radzen.Blazor.RadzenAxisTitle Text="BPM and SpO2 Data" />
+				</Radzen.Blazor.RadzenValueAxis>*@
+			@*</Radzen.Blazor.RadzenChart>*@
+			@*<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
+					<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="BPM" ValueProperty="BPM">
+						<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
+					</Radzen.Blazor.RadzenLineSeries>
+					<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}" />
+				</Radzen.Blazor.RadzenChart>*@
+			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID" @ref="myChart">
 				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="Movement" ValueProperty="Movement">
 					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
 				</Radzen.Blazor.RadzenLineSeries>
-				<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}" />
+				<RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Time" />
+				</RadzenCategoryAxis>
+				<RadzenValueAxis>
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Movement" />
+				</RadzenValueAxis>
 			</Radzen.Blazor.RadzenChart>
 
 		</div>
 	</div>
 </div>
 @code {
-    string patientss = "choose";
-    bool smooth = false;
-    string FormatAsUSD(object value)
-    {
-        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
-    }
-    private IList<VitalData> vitalData;
-    private IList<Patient> patients;
-    protected async override Task OnInitializedAsync()
-    {
-        vitalData = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
-        patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
-        patients.Cast<Patient>();
-    }
-    void OnChange(object value)
-    {
-        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+	RadzenChart myChart;
+	string patientss = "choose";
+	bool smooth = false;
+	string FormatAsUSD(object value)
+	{
+		return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"));
+	}
+	private IList<VitalData> vitalData;
+	private IList<Patient> patients;
+	protected async override Task OnInitializedAsync()
+	{
+		vitalData = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+		patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
+		patients.Cast<Patient>();
+	}
+	void OnChange(object value)
+	{
+		var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
 
-        Console.WriteLine($"Value changed to {str}");
-    }
-    //IEnumerable<ColorScheme> colorSchemes = Enum.GetValues(typeof(ColorScheme)).Cast<ColorScheme>();
-    //ColorScheme colorScheme = ColorScheme.Palette;
-    string selectedPatientID;
+		Console.WriteLine($"Value changed to {str}");
+	}
+	//IEnumerable<ColorScheme> colorSchemes = Enum.GetValues(typeof(ColorScheme)).Cast<ColorScheme>();
+	//ColorScheme colorScheme = ColorScheme.Palette;
+	string selectedPatientID;
 
-    string SelectedPatientID
-    {
-        get => selectedPatientID;
-        set { selectedPatientID = value; }
-    }
+	string SelectedPatientID
+	{
+		get => selectedPatientID;
+		set { selectedPatientID = value; }
+	}
+	void ExportToPdf()
+	{
+		int paragraphAfterSpacing = 8;
+		int cellMargin = 8;
+		PdfDocument pdfDocument = new PdfDocument();
+		//Add Page to the PDF document.
+		PdfPage page = pdfDocument.Pages.Add();
+
+		//Create a new font.
+		PdfStandardFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16);
+
+		//Create a text element to draw a text in PDF page.
+		PdfTextElement title = new PdfTextElement("Graph", font, PdfBrushes.Black);
+		PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
+
+
+		PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
+		PdfTextElement content = new PdfTextElement("This component demonstrates fetching data from a client side and Exporting the data to PDF document using Syncfusion .NET PDF library.", contentFont, PdfBrushes.Black);
+		PdfLayoutFormat format = new PdfLayoutFormat();
+		format.Layout = PdfLayoutType.Paginate;
+
+		//Draw a text to the PDF document.
+		result = content.Draw(page, new RectangleF(0, result.Bounds.Bottom + paragraphAfterSpacing, page.GetClientSize().Width, page.GetClientSize().Height), format);
+
+		//Create a PdfGrid.
+		PdfGrid pdfGrid = new PdfGrid();
+		pdfGrid.Style.CellPadding.Left = cellMargin;
+		pdfGrid.Style.CellPadding.Right = cellMargin;
+
+		//Applying built-in style to the PDF grid
+		pdfGrid.ApplyBuiltinStyle(PdfGridBuiltinStyle.GridTable4Accent1);
+
+		//Assign data source.
+		pdfGrid.DataSource = myChart;
+
+		pdfGrid.Style.Font = contentFont;
+
+		//Draw PDF grid into the PDF page.
+		pdfGrid.Draw(page, new Syncfusion.Drawing.PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
+
+		MemoryStream memoryStream = new MemoryStream();
+
+		// Save the PDF document.
+		pdfDocument.Save(memoryStream);
+
+		// Download the PDF document
+		JSRuntime.SaveAs("Sample.pdf", memoryStream.ToArray());
+
+	}
+
 }

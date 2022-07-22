@@ -2,13 +2,21 @@
 @inject HttpClient _client
 @inject HttpInterceptorService _interceptor
 @using Radzen
+@inject IJSRuntime JSRuntime
 @using Radzen.Blazor
 @using System.Globalization
+@using Syncfusion.Pdf
+@using Syncfusion.Pdf.Grid;
+@using Syncfusion.Drawing;
+@using Syncfusion.Pdf.Graphics;
+@using System.IO;
 
 <h3>CountData</h3>
 <h4>Choose date:</h4>
 
 <input class="form-control" type="date" format-value="yyyy-mm-dd" @bind="@inputValue" />
+<br>
+<button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
 
 @if (vitaldatas == null)
 {
@@ -43,19 +51,19 @@ else
 						{
 							SpO2Count99++;
 						}
-						@if (vitaldata.BPM <= 90 && vitaldata.BPM > 85)
+						@if (vitaldata.SpO2 == 98)
 						{
 							SpO2Count98++;
 						}
-						@if (vitaldata.BPM <= 85 && vitaldata.BPM > 80)
+						@if (vitaldata.SpO2 == 97)
 						{
 							SpO2Count97++;
 						}
-						@if (vitaldata.BPM <= 80 && vitaldata.BPM > 75)
+						@if (vitaldata.SpO2 == 96)
 						{
 							SpO2Count96++;
 						}
-						@if (vitaldata.BPM <= 75 && vitaldata.BPM > 70)
+						@if (vitaldata.SpO2 == 95)
 						{
 							SpO2Count95++;
 						}
@@ -84,15 +92,17 @@ else
 	SpO2Count96 = 0;
 	SpO2Count95 = 0;
 	<h1>Report</h1>
+	<button class="btn btn-primary" @onclick="@Onclick">Load</button>
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 my-5">
-				<Radzen.Blazor.RadzenChart>
+				<Radzen.Blazor.RadzenChart @ref="@myChart">
 					<Radzen.Blazor.RadzenBarSeries Data="@SpO2s" CategoryProperty="SpO2" Title="SpO2Count" ValueProperty="SpO2Count" />
 					@*<RadzenValueAxis Formatter="@FormatAsUSD">*@
 					<!--<RadzenGridLines Visible="true" />
-						<RadzenAxisTitle Text="Revenue in USD" />
+					<RadzenAxisTitle Text="Revenue in USD" />
 					</RadzenValueAxis>-->
+					@*<RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}">*@
 					<Radzen.Blazor.RadzenBarOptions Radius="5" />
 				</Radzen.Blazor.RadzenChart>
 			</div>
@@ -101,45 +111,67 @@ else
 }
 
 @code {
+	RadzenChart myChart;
+	int counting = 0;
+	void Onclick()
+	{
+		if (counting == 0)
+		{
+			SpO2s.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), SpO2 = "SpO2 100", SpO2Count = SpO2Counts100 });
+			SpO2s.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), SpO2 = "SpO2 99", SpO2Count = SpO2Counts99 });
+			SpO2s.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), SpO2 = "SpO2 98", SpO2Count = SpO2Counts98 });
+			SpO2s.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), SpO2 = "SpO2 97", SpO2Count = SpO2Counts97 });
+			SpO2s.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), SpO2 = "SpO2 96", SpO2Count = SpO2Counts96 });
+			SpO2s.Add(new DataItem {Date = inputValue.ToString("yyyy-MM-dd"), SpO2 = "SpO2 95", SpO2Count = SpO2Counts95 });
+			counting++;
+			myChart.Reload();
+		}
+		else
+		{
+			SpO2s.Clear();
+			counting = 0;
+		}
+	}
 	class DataItem
 	{
+		public string Date{ get; set; }
 		public string SpO2 { get; set; }
 		public int SpO2Count { get; set; }
 	}
-	DataItem[] SpO2s = new DataItem[]
-	{
-		new DataItem
-		{
-			SpO2 = "SpO2 100",
-			SpO2Count = SpO2Counts100,
-		},
-		new DataItem
-		{
-			SpO2 = "SpO2 99",
-			SpO2Count = SpO2Counts99,
-		},
-		new DataItem
-		{
-			SpO2 = "SpO2 98",
-			SpO2Count = SpO2Counts98,
-		},
-		new DataItem
-		{
-			SpO2 = "SpO2 97",
-			SpO2Count = SpO2Counts97,
-		},
-		new DataItem
-		{
-			SpO2 = "SpO2 96",
-			SpO2Count = SpO2Counts96,
-		},
-		new DataItem
-		{
-			SpO2 = "SpO2 95",
-			SpO2Count = SpO2Counts95,
-		},
+	List<DataItem> SpO2s = new List<DataItem>();
+	//{
+	//	new DataItem
+	//	{
+	//		SpO2 = "SpO2 100",
+	//		SpO2Count = SpO2Counts100,
+	//	},
+	//	new DataItem
+	//	{
+	//		SpO2 = "SpO2 99",
+	//		SpO2Count = SpO2Counts99,
+	//	},
+	//	new DataItem
+	//	{
+	//		SpO2 = "SpO2 98",
+	//		SpO2Count = SpO2Counts98,
+	//	},
+	//	new DataItem
+	//	{
+	//		SpO2 = "SpO2 97",
+	//		SpO2Count = SpO2Counts97,
+	//	},
+	//	new DataItem
+	//	{
+	//		SpO2 = "SpO2 96",
+	//		SpO2Count = SpO2Counts96,
+	//	},
+	//	new DataItem
+	//	{
+	//		SpO2 = "SpO2 95",
+	//		SpO2Count = SpO2Counts95,
+	//	},
 
-								};
+	//							};
 	public static int SpO2Counts100;
 	public static int SpO2Counts99;
 	public static int SpO2Counts98;
@@ -162,5 +194,54 @@ else
 	private void OnInputValue(ChangeEventArgs changeEvent)
 	{
 		inputValue = (DateTime)changeEvent.Value;
+	}
+	void ExportToPdf()
+	{
+		int paragraphAfterSpacing = 8;
+		int cellMargin = 8;
+		PdfDocument pdfDocument = new PdfDocument();
+		//Add Page to the PDF document.
+		PdfPage page = pdfDocument.Pages.Add();
+
+		//Create a new font.
+		PdfStandardFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16);
+
+		//Create a text element to draw a text in PDF page.
+		PdfTextElement title = new PdfTextElement("SpO2", font, PdfBrushes.Black);
+		PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
+
+
+		PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
+		PdfTextElement content = new PdfTextElement("This component demonstrates fetching data from a client side and Exporting the data to PDF document using Syncfusion .NET PDF library.", contentFont, PdfBrushes.Black);
+		PdfLayoutFormat format = new PdfLayoutFormat();
+		format.Layout = PdfLayoutType.Paginate;
+
+		//Draw a text to the PDF document.
+		result = content.Draw(page, new RectangleF(0, result.Bounds.Bottom + paragraphAfterSpacing, page.GetClientSize().Width, page.GetClientSize().Height), format);
+
+		//Create a PdfGrid.
+		PdfGrid pdfGrid = new PdfGrid();
+		pdfGrid.Style.CellPadding.Left = cellMargin;
+		pdfGrid.Style.CellPadding.Right = cellMargin;
+
+		//Applying built-in style to the PDF grid
+		pdfGrid.ApplyBuiltinStyle(PdfGridBuiltinStyle.GridTable4Accent1);
+
+		//Assign data source.
+		pdfGrid.DataSource = SpO2s;
+
+		pdfGrid.Style.Font = contentFont;
+
+		//Draw PDF grid into the PDF page.
+		pdfGrid.Draw(page, new Syncfusion.Drawing.PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
+
+		MemoryStream memoryStream = new MemoryStream();
+
+		// Save the PDF document.
+		pdfDocument.Save(memoryStream);
+
+		// Download the PDF document
+		JSRuntime.SaveAs("Sample.pdf", memoryStream.ToArray());
+
 	}
 }

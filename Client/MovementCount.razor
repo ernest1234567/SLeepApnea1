@@ -1,0 +1,390 @@
+﻿@page "/Movedata/"
+@inject HttpClient _client
+@inject HttpInterceptorService _interceptor
+@using Radzen
+@using Radzen.Blazor
+@using System.Globalization
+
+<h3>CountData</h3>
+<h4>Choose date:</h4>
+
+<input class="form-control" type="date" format-value="yyyy-mm-dd" @bind="@inputValue" />
+
+@if (vitaldatas == null)
+{
+	<div class="alert alert-info">Loading VitalDatas...</div>
+}
+else
+{
+	<table class="table table-responsive" id="rolessTable">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Count 191-200</th>
+				<th>Count 181-190</th>
+				<th>Count 171-180</th>
+				<th>Count 161-170</th>
+				<th>Count 151-160</th>
+				<th>Count 141-150</th>
+				<th>Count 131-140</th>
+				<th>Count 121-130</th>
+				<th>Count 111-120</th>
+				<th>Count 101-110</th>
+				<th>Count 91-100</th>
+				<th>Count 81-90</th>
+				<th>Count 71-80</th>
+				<th>Count 61-70</th>
+				<th>Count 51-60</th>
+				<th>Count 41-50</th>
+				<th>Count 31-40</th>
+				<th>Count 21-30</th>
+				<th>Count 11-20</th>
+				<th>Count 0-10</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var vitaldata in vitaldatas)
+			{
+				@if (inputValue.ToString("yyyy-MM-dd") == vitaldata.Date)
+				//if (vitaldata.Date == date
+				{
+					<tr>
+						@if (vitaldata.Movement <= 200 && vitaldata.Movement > 190)
+						{
+							MoveCount200++;
+						}
+						@if (vitaldata.Movement <= 190 && vitaldata.Movement > 180)
+						{
+							MoveCount190++;
+						}
+						@if (vitaldata.Movement <= 180 && vitaldata.Movement > 170)
+						{
+							MoveCount180++;
+						}
+						@if (vitaldata.Movement <= 170 && vitaldata.Movement > 160)
+						{
+							MoveCount170++;
+						}
+						@if (vitaldata.Movement <= 160 && vitaldata.Movement > 150)
+						{
+							MoveCount160++;
+						}
+						@if (vitaldata.Movement <= 150 && vitaldata.Movement > 140)
+						{
+							MoveCount150++;
+						}
+						@if (vitaldata.Movement <= 140 && vitaldata.Movement > 130)
+						{
+							MoveCount140++;
+						}
+						@if (vitaldata.Movement <= 130 && vitaldata.Movement > 120)
+						{
+							MoveCount130++;
+						}
+						@if (vitaldata.Movement <= 120 && vitaldata.Movement > 110)
+						{
+							MoveCount120++;
+						}
+						@if (vitaldata.Movement <= 110 && vitaldata.Movement > 100)
+						{
+							MoveCount110++;
+						}
+						@if (vitaldata.Movement <= 100 && vitaldata.Movement > 90)
+						{
+							MoveCount100++;
+						}
+						@if (vitaldata.Movement <= 90 && vitaldata.Movement > 80)
+						{
+							MoveCount90++;
+						}
+						@if (vitaldata.Movement <= 80 && vitaldata.Movement > 70)
+						{
+							MoveCount80++;
+						}
+						@if (vitaldata.Movement <= 70 && vitaldata.Movement > 60)
+						{
+							MoveCount70++;
+						}
+						@if (vitaldata.Movement <= 60 && vitaldata.Movement > 50)
+						{
+							MoveCount60++;
+						}
+						@if (vitaldata.Movement <= 50 && vitaldata.Movement > 40)
+						{
+							MoveCount50++;
+						}
+						@if (vitaldata.Movement <= 40 && vitaldata.Movement > 30)
+						{
+							MoveCount40++;
+						}
+						@if (vitaldata.Movement <= 30 && vitaldata.Movement > 20)
+						{
+							MoveCount30++;
+						}
+						@if (vitaldata.Movement <= 20 && vitaldata.Movement > 10)
+						{
+							MoveCount20++;
+						}
+						@if (vitaldata.Movement <= 10 || vitaldata.Movement == 0)
+						{
+							MoveCount10++;
+						}
+
+					</tr>
+				}
+				MoveCounts200 = MoveCount200;
+				MoveCounts190 = MoveCount190;
+				MoveCounts180 = MoveCount180;
+				MoveCounts170 = MoveCount170;
+				MoveCounts160 = MoveCount160;
+				MoveCounts150 = MoveCount150;
+				MoveCounts140 = MoveCount140;
+				MoveCounts130 = MoveCount130;
+				MoveCounts120 = MoveCount120;
+				MoveCounts110 = MoveCount110;
+				MoveCounts100 = MoveCount100;
+				MoveCounts90 = MoveCount90;
+				MoveCounts80 = MoveCount80;
+				MoveCounts70 = MoveCount70;
+				MoveCounts60 = MoveCount60;
+				MoveCounts50 = MoveCount50;
+				MoveCounts40 = MoveCount40;
+				MoveCounts30 = MoveCount30;
+				MoveCounts20 = MoveCount20;
+				MoveCounts10 = MoveCount10;
+			}
+		<td>@inputValue.ToString("yyyy-MM-dd")</td>
+		<td>@MoveCounts200</td>
+		<td>@MoveCounts190</td>
+		<td>@MoveCounts180</td>
+		<td>@MoveCounts170</td>
+		<td>@MoveCounts160</td>
+		<td>@MoveCounts150</td>
+		<td>@MoveCounts140</td>
+		<td>@MoveCounts130</td>
+		<td>@MoveCounts120</td>
+		<td>@MoveCounts110</td>
+		<td>@MoveCounts100</td>
+		<td>@MoveCounts90</td>
+		<td>@MoveCounts80</td>
+		<td>@MoveCounts70</td>
+		<td>@MoveCounts60</td>
+		<td>@MoveCounts50</td>
+		<td>@MoveCounts40</td>
+		<td>@MoveCounts30</td>
+		<td>@MoveCounts20</td>
+		<td>@MoveCounts10</td>
+		</tbody>
+	</table>
+	<h1>Report</h1>
+	<button class="btn btn-primary" @onclick="@OnClick">Load</button>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 my-5">
+				<Radzen.Blazor.RadzenChart @ref="@myChart">
+					<Radzen.Blazor.RadzenBarSeries Data="@Moves" CategoryProperty="Move" Title="MoveCount" ValueProperty="MoveCount" />
+					@*<RadzenValueAxis Formatter="@FormatAsUSD">*@
+					<!--<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Revenue in USD" />
+					</RadzenValueAxis>-->
+					<Radzen.Blazor.RadzenBarOptions Radius="5" />
+					@*<RadzenButton Click="@OnClick" Text="Refresh" />*@
+				</Radzen.Blazor.RadzenChart>
+			</div>
+		</div>
+	</div>
+	MoveCount200 = 0;
+	MoveCount190 = 0;
+	MoveCount180 = 0;
+	MoveCount170 = 0;
+	MoveCount160 = 0;
+	MoveCount150 = 0;
+	MoveCount140 = 0;
+	MoveCount130 = 0;
+	MoveCount120 = 0;
+	MoveCount110 = 0;
+	MoveCount100 = 0;
+	MoveCount90 = 0;
+	MoveCount80 = 0;
+	MoveCount70 = 0;
+	MoveCount60 = 0;
+	MoveCount50 = 0;
+	MoveCount40 = 0;
+	MoveCount30 = 0;
+	MoveCount20 = 0;
+	MoveCount10 = 0;
+
+}
+
+@code {
+	RadzenChart myChart;
+	int counting = 0;
+	void OnClick()
+	{
+		if (counting == 0)
+		{
+			Moves.Add(new DataItem { Move = "Move191-200", MoveCount = MoveCounts200 });
+			Moves.Add(new DataItem { Move = "Move181-190", MoveCount = MoveCounts190 });
+			Moves.Add(new DataItem { Move = "Move171-180", MoveCount = MoveCounts180 });
+			Moves.Add(new DataItem { Move = "Move161-170", MoveCount = MoveCounts170 });
+			Moves.Add(new DataItem { Move = "Move151-160", MoveCount = MoveCounts160 });
+			Moves.Add(new DataItem { Move = "Move141-150", MoveCount = MoveCounts150 });
+			Moves.Add(new DataItem { Move = "Move131-140", MoveCount = MoveCounts140 });
+			Moves.Add(new DataItem { Move = "Move121-130", MoveCount = MoveCounts130 });
+			Moves.Add(new DataItem { Move = "Move111-120", MoveCount = MoveCounts120 });
+			Moves.Add(new DataItem { Move = "Move101-110", MoveCount = MoveCounts110 });
+			Moves.Add(new DataItem { Move = "Move91-100", MoveCount = MoveCounts100 });
+			Moves.Add(new DataItem { Move = "Move81-90", MoveCount = MoveCounts90});
+			Moves.Add(new DataItem { Move = "Move71-80", MoveCount = MoveCounts80 });
+			Moves.Add(new DataItem { Move = "Move61-70", MoveCount = MoveCounts70 });
+			Moves.Add(new DataItem { Move = "Move51-60", MoveCount = MoveCounts60 });
+			Moves.Add(new DataItem { Move = "Move41-50", MoveCount = MoveCounts50 });
+			Moves.Add(new DataItem { Move = "Move31-40", MoveCount = MoveCounts40 });
+			Moves.Add(new DataItem { Move = "Move21-30", MoveCount = MoveCounts30 });
+			Moves.Add(new DataItem { Move = "Move11-20", MoveCount = MoveCounts20 });
+			Moves.Add(new DataItem { Move = "Move0-10", MoveCount = MoveCounts10 });
+			counting++;
+			myChart.Reload();
+		}
+		else
+		{
+			Moves.Clear();
+			counting = 0;
+		}
+	}
+	class DataItem
+	{
+		public string Move { get; set; }
+		public int MoveCount { get; set; }
+	}
+	List<DataItem> Moves = new List<DataItem>();
+	//{
+	//	new DataItem
+	//	{
+	//		BPM = "BPM100",
+	//		BPMCount = BPMCounts100
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM95",
+	//		BPMCount = BPMCounts95
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM90",
+	//		BPMCount = BPMCounts90
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM85",
+	//		BPMCount = BPMCounts85
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM80",
+	//		BPMCount = BPMCounts80
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM75",
+	//		BPMCount = BPMCounts75
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM70",
+	//		BPMCount = BPMCounts70
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM65",
+	//		BPMCount = BPMCounts65
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM60",
+	//		BPMCount = BPMCounts60
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM55",
+	//		BPMCount = BPMCounts55
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM50",
+	//		BPMCount = BPMCounts50
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM45",
+	//		BPMCount = BPMCounts45
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM40",
+	//		BPMCount = BPMCounts40
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM35",
+	//		BPMCount = BPMCounts35
+	//	},
+	//	new DataItem
+	//	{
+	//		BPM = "BPM30",
+	//		BPMCount = BPMCounts30
+	//	},
+
+	//										};
+	public static int MoveCounts200;
+	public static int MoveCounts190;
+	public static int MoveCounts180;
+	public static int MoveCounts170;
+	public static int MoveCounts160;
+	public static int MoveCounts150;
+	public static int MoveCounts140;
+	public static int MoveCounts130;
+	public static int MoveCounts120;
+	public static int MoveCounts110;
+	public static int MoveCounts100;
+	public static int MoveCounts90;
+	public static int MoveCounts80;
+	public static int MoveCounts70;
+	public static int MoveCounts60;
+	public static int MoveCounts50;
+	public static int MoveCounts40;
+	public static int MoveCounts30;
+	public static int MoveCounts20;
+	public static int MoveCounts10;
+	public static int MoveCount200 = 0;
+	public static int MoveCount190 = 0;
+	public static int MoveCount180 = 0;
+	public static int MoveCount170 = 0;
+	public static int MoveCount160 = 0;
+	public static int MoveCount150 = 0;
+	public static int MoveCount140 = 0;
+	public static int MoveCount130 = 0;
+	public static int MoveCount120 = 0;
+	public static int MoveCount110 = 0;
+	public static int MoveCount100 = 0;
+	public static int MoveCount90 = 0;
+	public static int MoveCount80 = 0;
+	public static int MoveCount70 = 0;
+	public static int MoveCount60 = 0;
+	public static int MoveCount50 = 0;
+	public static int MoveCount40 = 0;
+	public static int MoveCount30 = 0;
+	public static int MoveCount20 = 0;
+	public static int MoveCount10 = 0;
+	private List<VitalData> vitaldatas;
+	protected async override Task OnInitializedAsync()
+	{
+		_interceptor.MonitorEvent();
+		vitaldatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+	}
+	private DateTime inputValue { get; set; }
+	private void OnInputValue(ChangeEventArgs changeEvent)
+	{
+		inputValue = (DateTime)changeEvent.Value;
+	}
+}
