@@ -13,17 +13,25 @@
 
 <h1>BPM and Sp02 Data</h1>
 <br>
+<h5>Choose Patient:</h5>
+<select class="form-control" @bind="@inputValues">
+	<option value="">-- Select Patient --</option>
+	@if (patients != null)
+	{
+		foreach (var patient in patients)
+		{
+			<option value="@patient.ID">@patient.Name</option>
+		}
+	}
+</select>
+<br>
 <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
 <button class="btn btn-primary" @onclick="@Print">Print Graph PDF</button>
+@if (inputValues == "5")
+{
 <div class="container">
 	<div class="row">
 		<div class="col-sm-12 my-5">
-
-			<Radzen.Blazor.RadzenCard Class="w-100 mb-4">
-				<RadzenLabel Text="SleepApnea:" Style="margin-right: 8px; vertical-align: middle;" />
-				<RadzenDropDown TValue="string" Name="patient" Data="@patients" TextProperty="Name" ValueProperty="Name" @bind-Value="SelectedPatientID" Placeholder="Select..." Class="w100p" AllowFiltering="true" AllowVirtualization="true" />	`
-			</Radzen.Blazor.RadzenCard>
-			<p>@SelectedPatientID</p>
 			<!--<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID">
 				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="SpO2" LineType="Radzen.Blazor.LineType.Dashed" ValueProperty="SpO2" >
 					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Square" />
@@ -43,7 +51,7 @@
 					</Radzen.Blazor.RadzenLineSeries>
 					<Radzen.Blazor.RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}" />
 				</Radzen.Blazor.RadzenChart>*@
-			<Radzen.Blazor.RadzenChart @bind-Value="SelectedPatientID" @ref="myChart">
+			<Radzen.Blazor.RadzenChart @ref="myChart" @bind-Value="@inputValues">
 				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@vitalData" CategoryProperty="Time" Title="Movement" ValueProperty="Movement">
 					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
 				</Radzen.Blazor.RadzenLineSeries>
@@ -60,6 +68,7 @@
 		</div>
 	</div>
 </div>
+}
 @code {
 	RadzenChart myChart;
 	string patientss = "choose";
@@ -74,7 +83,6 @@
 	{
 		vitalData = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
 		patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
-		patients.Cast<Patient>();
 	}
 	void OnChange(object value)
 	{
@@ -144,5 +152,9 @@
 	{
 		await JSRuntime.InvokeVoidAsync("printInvoke");
 	}
-
+	private string inputValues { get; set; }
+	private void OnInputValues(ChangeEventArgs changeEvent)
+	{
+		inputValues = (string)changeEvent.Value;
+	}
 }

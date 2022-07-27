@@ -30,7 +30,7 @@ else
 				<th>Name</th>
 				<th>PhoneNumber</th>
 				<th>Email</th>
-				<th>Role</th>
+				@*<th>Role</th>*@
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -41,14 +41,14 @@ else
 					<td>@patient.Name</td>
 					<td>@patient.PhoneNumber</td>
 					<td>@patient.Email</td>
-					@foreach (var roles in roless)
+					@*@foreach (var roles in roless)
 					{
 						if (patient.RolesID == roles.ID)
 						{
 							<td>@roles.ID</td>
 						}
 
-					}
+					}*@
 					<td>
 						<a href="/patients/view/@patient.ID" class="btn btn-primary">
 							<span class="oi oi-book"></span>

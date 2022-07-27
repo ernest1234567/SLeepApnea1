@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SLeepApnea.Server.Data;
 
 namespace SLeepApnea.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220722091923_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -457,9 +459,6 @@ namespace SLeepApnea.Server.Migrations
                     b.Property<int>("Movement")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PatientID")
-                        .HasColumnType("int");
-
                     b.Property<int>("SpO2")
                         .HasColumnType("int");
 
@@ -467,8 +466,6 @@ namespace SLeepApnea.Server.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("PatientID");
 
                     b.ToTable("VitalDatas");
                 });
@@ -531,15 +528,6 @@ namespace SLeepApnea.Server.Migrations
                         .HasForeignKey("RolesID");
 
                     b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("SLeepApnea.Shared.Domain.VitalData", b =>
-                {
-                    b.HasOne("SLeepApnea.Shared.Domain.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientID");
-
-                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

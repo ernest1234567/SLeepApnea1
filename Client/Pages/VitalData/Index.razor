@@ -14,8 +14,23 @@
 
 <h3 class="card-title">VitalDatas</h3>
 <br />
+<h4>Choose date:</h4>
+<input class="form-control" type="date" format-value="yyyy-mm-dd" @bind="@inputValues" />
+<br>
+<h5>Choose Patient:</h5>
+<select class="form-control" @bind="@inputValue">
+	<option value="">-- Select Patient --</option>
+	@if (patients != null)
+	{
+		foreach (var patient in patients)
+		{
+			<option value="@patient.ID">@patient.Name</option>
+		}
+	}
+</select>
+<br>
 <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
-
+<button class="btn btn-primary" @onclick="@Print">Print Graph PDF</button>
 @*<a href="/vitalDatas/create" class="btn btn-secondary">
 		<span class="oi oi-plus"></span>
 		Create New VitalData
@@ -31,9 +46,10 @@
 }
 else
 {
-	<table class="table table-responsive" id="rolessTable">
+	<table class="table table-responsive" id="vitaldatasTable">
 		<thead>
 			<tr>
+				<th>Name</th>
 				<th>BPM</th>
 				<th>SPO2</th>
 				<th>Movement</th>
@@ -45,12 +61,26 @@ else
 			@foreach (var vitaldata in vitaldatas)
 			{
 				<tr>
-					<td>@vitaldata.BPM</td>
-					<td>@vitaldata.SpO2</td>
-					<td>@vitaldata.Movement</td>
-					<td>@vitaldata.Date</td>
-					<td>@vitaldata.Time</td>
+					@foreach (var patient in patients)
+					{
+						@if (inputValue == vitaldata.PatientID.ToString() || inputValues.ToString("yyyy-MM-dd") == vitaldata.Date)
+						{
+							<td>@patient.Name</td>
+							<td>@vitaldata.BPM</td>
+							<td>@vitaldata.SpO2</td>
+							<td>@vitaldata.Movement</td>
+							<td>@vitaldata.Date</td>
+							<td>@vitaldata.Time</td>
+						}
+
+					}
+					@*<td>@vitaldata.BPM</td>
+						<td>@vitaldata.SpO2</td>
+						<td>@vitaldata.Movement</td>
+						<td>@vitaldata.Date</td>
+						<td>@vitaldata.Time</td>*@
 				</tr>
+
 			}
 		</tbody>
 	</table>
@@ -60,10 +90,12 @@ else
 @code
 {
 	private List<VitalData> vitaldatas;
+	private List<Patient> patients;
 	protected async override Task OnInitializedAsync()
 	{
 		_interceptor.MonitorEvent();
 		vitaldatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+		patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
 	}
 
 	protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -86,6 +118,17 @@ else
 		}
 	}
 	[Parameter] public VitalData vitalData { get; set; }
+	[Parameter] public Patient PatientSS { get; set; }
+	private DateTime inputValues { get; set; }
+	private void OnInputValues(ChangeEventArgs changeEvent)
+	{
+		inputValues = (DateTime)changeEvent.Value;
+	}
+	private string inputValue { get; set; }
+	private void OnInputValue(ChangeEventArgs changeEvent)
+	{
+		inputValue = (string)changeEvent.Value;
+	}
 	void ExportToPdf()
 	{
 		int paragraphAfterSpacing = 8;
@@ -134,5 +177,9 @@ else
 		// Download the PDF document
 		js.SaveAs("Sample.pdf", memoryStream.ToArray());
 
+	}
+	private async Task Print()
+	{
+		await js.InvokeVoidAsync("printInvoke");
 	}
 }

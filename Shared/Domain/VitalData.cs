@@ -15,9 +15,12 @@ namespace SLeepApnea.Shared.Domain
 		public int SpO2 { get; set; }
 		public String Date { get; set; }
 		public String Time { get; set; }
+		public virtual Patient Patient { get; set; }
+		public int? PatientID { get; set; }
 
-		
-		}
+
+
+	}
 
 
 	}
