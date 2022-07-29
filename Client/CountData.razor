@@ -65,7 +65,7 @@ else
 		<tbody>
 			@foreach (var vitaldata in vitaldatas)
 			{
-				@if (inputValue.ToString("yyyy-MM-dd") == vitaldata.Date || inputValues == vitaldata.PatientID.ToString())
+				@if (inputValue.ToString("yyyy-MM-dd") == vitaldata.Date && inputValues == vitaldata.PatientID.ToString())
 				//if (vitaldata.Date == date
 				{
 					<tr>
