@@ -1,3 +1,59 @@
 ﻿@page "/StartStop"
-<button class="btn-primary">start</button>
-<button class="btn-primary">stop</button>
+@using Microsoft.EntityFrameworkCore
+@inject HttpClient _client
+@inject NavigationManager _navManager
+@inject HttpInterceptorService _interceptor
+@using Microsoft.EntityFrameworkCore;
+@using Radzen
+@using Microsoft.SqlServer;
+@using Microsoft.SqlServer.Server;
+@using Microsoft.Data.Sql;
+@using Microsoft.Data.SqlClient;
+@using Microsoft.Data.SqlClient.DataClassification;
+@using Microsoft.Data.SqlClient.Server;
+@inject IJSRuntime JSRuntime
+@using Radzen.Blazor
+@using System.Globalization
+@using Syncfusion.Pdf
+@using Syncfusion.Pdf.Grid;
+@using Syncfusion.Drawing;
+@using Syncfusion.Pdf.Graphics;
+@using System.IO;
+
+<h5>Choose Patient:</h5>
+<select class="form-control" @bind="@inputValues">
+	<option value="">-- Select Patient --</option>
+	@if (patients != null)
+	{
+		foreach (var patient in patients)
+		{
+			<option value="@patient.ID">@patient.Name</option>
+		}
+	}
+</select>
+<br>
+<button class="btn-primary" @onclick="@Createdoctor">Select</button>
+@*<button class="btn-primary">stop</button>*@
+
+@code
+{
+	VitalData vitalData = new VitalData();
+	private List<Patient> patients;
+	private List<VitalData> vitalDatas;
+	protected async override Task OnInitializedAsync()
+	{
+		_interceptor.MonitorEvent();
+		patients = await _client.GetFromJsonAsync<List<Patient>>("api/Patients");
+		vitalDatas = await _client.GetFromJsonAsync<List<VitalData>>("api/VitalDatas");
+	}
+	private static int inputValues { get; set; }
+	private void OnInputValues(ChangeEventArgs changeEvent)
+	{
+		inputValues = (int)changeEvent.Value;
+	}
+	private async Task Createdoctor()
+	{
+		var vitaldata = new VitalData{PatientID = inputValues };
+		await _client.PostAsJsonAsync(Endpoints.VitalDatasEndpoint, vitaldata);
+	}
+}

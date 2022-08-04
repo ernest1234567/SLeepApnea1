@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -10,17 +12,21 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SLeepApnea.Client.Static;
 using SLeepApnea.Server.Models;
 using SLeepApnea.Shared.Domain;
+
 
 namespace SLeepApnea.Server.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly HttpClient _httpClient;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
@@ -28,19 +34,20 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
+            HttpClient httpClient,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager)
         {
-            _userManager = userManager;
+            _httpClient = httpClient;
+            _userManager = userManager;    
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
         }
-
         [BindProperty]
         public InputModel Input { get; set; }
         public string ReturnUrl { get; set; }
@@ -84,14 +91,17 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult>OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email,FirstName=Input.FirstName,LastName=Input.LastName,Roles=Input.Roles};
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Roles = Input.Roles };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                Patient patient = new Patient{Name = Input.FirstName, Email= Input.Email};
+                var patientresult = await _httpClient.PostAsJsonAsync("https://localhost:44327/patients", patient);
 
                 var roles = new IdentityRole(Input.Roles);
                 var addRoleResult = await _roleManager.CreateAsync(roles);
@@ -138,6 +148,5 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
     }
 }

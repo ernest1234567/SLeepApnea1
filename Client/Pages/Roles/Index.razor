@@ -1,5 +1,5 @@
 ﻿@page "/roless/"
-@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Authorization;
 @inject HttpClient _client
 @inject IJSRuntime js
 @inject HttpInterceptorService _interceptor
@@ -35,19 +35,19 @@ else
 			@foreach (var roles in roless)
 			{
 				<tr>
-				<td>@roles.rolename</td>
-				<td>
-					<a href="/roless/view/@roles.ID" class="btn btn-primary">
-						<span class="oi oi-book"></span>
-					</a>
-					<a href="/roless/edit/@roles.ID" class="btn btn-warning">
-						<span class="oi oi-pencil"></span>
-					</a>
-					<button class="btn btn-danger" @onclick="@(()=>Delete(roles.ID))">
-						<span class="oi oi-delete"></span>
-					</button>
-				</td>
-			</tr>
+					<td>@roles.rolename</td>
+					<td>
+						<a href="/roless/view/@roles.ID" class="btn btn-primary">
+							<span class="oi oi-book"></span>
+						</a>
+						<a href="/roless/edit/@roles.ID" class="btn btn-warning">
+							<span class="oi oi-pencil"></span>
+						</a>
+						<button class="btn btn-danger" @onclick="@(()=>Delete(roles.ID))">
+							<span class="oi oi-delete"></span>
+						</button>
+					</td>
+				</tr>
 			}
 		</tbody>
 	</table>
@@ -82,4 +82,5 @@ else
 			await OnInitializedAsync();
 		}
 	}
+
 }

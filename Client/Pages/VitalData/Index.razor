@@ -63,7 +63,7 @@ else
 				<tr>
 					@foreach (var patient in patients)
 					{
-						@if (inputValue == vitaldata.PatientID.ToString() && inputValues.ToString("yyyy-MM-dd") == vitaldata.Date &&vitaldata.PatientID==patient.ID)
+						@if (inputValue == vitaldata.PatientID.ToString() && inputValues.ToString("yyyy-MM-dd") == vitaldata.Date && vitaldata.PatientID == patient.ID)
 						{
 							<td>@patient.Name</td>
 							<td>@vitaldata.BPM</td>
@@ -74,10 +74,10 @@ else
 						}
 					}
 					@*<td>@vitaldata.BPM</td>
-					<td>@vitaldata.SpO2</td>
-					<td>@vitaldata.Movement</td>
-					<td>@vitaldata.Date</td>
-					<td>@vitaldata.Time</td>*@
+						<td>@vitaldata.SpO2</td>
+						<td>@vitaldata.Movement</td>
+						<td>@vitaldata.Date</td>
+						<td>@vitaldata.Time</td>*@
 				</tr>
 			}
 		</tbody>
