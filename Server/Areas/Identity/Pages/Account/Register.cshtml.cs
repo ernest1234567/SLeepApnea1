@@ -55,9 +55,9 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            //[EmailAddress]
+            [Display(Name = "UserName")]
+            public string UserName { get; set; }
 
             [Required]
             [Display(Name = "First Name")]
@@ -97,10 +97,10 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, Roles = Input.Roles };
+                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.UserName, FirstName = Input.FirstName, LastName = Input.LastName, Roles = Input.Roles };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
-                Patient patient = new Patient{Name = Input.FirstName, Email= Input.Email};
+                Patient patient = new Patient{Name = Input.FirstName, Email= Input.UserName};
                 var patientresult = await _httpClient.PostAsJsonAsync("https://localhost:44327/patients", patient);
 
                 var roles = new IdentityRole(Input.Roles);
@@ -126,12 +126,12 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    await _emailSender.SendEmailAsync(Input.UserName, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.UserName, returnUrl = returnUrl });
                     }
                     else
                     {

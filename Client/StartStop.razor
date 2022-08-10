@@ -1,8 +1,14 @@
 ﻿@page "/StartStop"
-@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+@using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 @inject HttpClient _client
 @inject NavigationManager _navManager
 @inject HttpInterceptorService _interceptor
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Http;
 @using Microsoft.EntityFrameworkCore;
 @using Radzen
 @using Microsoft.SqlServer;
@@ -19,6 +25,7 @@
 @using Syncfusion.Drawing;
 @using Syncfusion.Pdf.Graphics;
 @using System.IO;
+@using SLeepApnea.Client;
 
 <h5>Choose Patient:</h5>
 <select class="form-control" @bind="@inputValues">
@@ -32,11 +39,12 @@
 	}
 </select>
 <br>
-<button class="btn-primary" @onclick="@Createdoctor">Select</button>
+<button class="btn-primary" @onclick="@CreateIDss">Select</button>
 @*<button class="btn-primary">stop</button>*@
 
 @code
 {
+	[Parameter] public int id { get; set; } = 20;
 	VitalData vitalData = new VitalData();
 	private List<Patient> patients;
 	private List<VitalData> vitalDatas;
@@ -51,9 +59,26 @@
 	{
 		inputValues = (int)changeEvent.Value;
 	}
-	private async Task Createdoctor()
+	private async Task CreateID()
 	{
-		var vitaldata = new VitalData{PatientID = inputValues };
+		var vitaldata = new VitalData{ PatientID = inputValues };
 		await _client.PostAsJsonAsync(Endpoints.VitalDatasEndpoint, vitaldata);
 	}
+	//async Task CreateIDs()
+	//{
+	//	var vitaldata = new VitalData { PatientID = inputValues };
+	//	await _client.PutAsJsonAsync(Endpoints.VitalDatasEndpoint, vitaldata);
+	//}
+	private async Task CreateIDss()
+	{
+		@foreach(var vitaldata in vitalDatas)
+		{
+			@if(vitaldata.PatientID == null)
+			{
+				var vitaldatas = new VitalData {ID = vitaldata.ID, BPM = vitaldata.BPM,SpO2=vitaldata.SpO2,Date = vitaldata.Date, Movement = vitaldata.Movement, Time = vitaldata.Time, PatientID = inputValues };
+				await _client.PutAsJsonAsync($"{Endpoints.VitalDatasEndpoint}", vitaldatas);
+			}
+		}
+	}
+
 }

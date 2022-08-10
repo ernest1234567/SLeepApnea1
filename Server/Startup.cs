@@ -32,7 +32,7 @@ namespace SLeepApnea.Server
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-			var connectionString = "server=localhost;user=root;database=sleepapnea;port=3307";
+			var connectionString = "server=192.168.43.153;user=root;database=sleepapnea;password=1234;port=3307";
 
 			// Replace with your server version and type.
 			// Use 'MariaDbServerVersion' for MariaDB.

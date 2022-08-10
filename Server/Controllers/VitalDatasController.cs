@@ -42,35 +42,49 @@ namespace SLeepApnea.Server.Controllers
             return vitalData;
         }
 
-        // PUT: api/VitalDatas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutVitalData(int id, VitalData vitalData)
-        {
-            if (id != vitalData.ID)
-            {
-                return BadRequest();
-            }
+		// PUT: api/VitalDatas/5
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutVitalData(int id, VitalData vitalData)
+		{
+			//if (id != vitalData.ID)
+			//{
+			//    return BadRequest();
+			//}
+			_context.Entry(vitalData).State = EntityState.Modified;
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				//if (!VitalDataExists(id))
+				//{
+				//	return NotFound();
+				//}
+				//else
+				//{
+				//	throw;
+				//}
+			}
 
+			return NoContent();
+		}
+		[HttpPut]
+        public async Task<IActionResult> PutVitalDatas(VitalData vitalData)
+		{
             _context.Entry(vitalData).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch
             {
-                if (!VitalDataExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
             }
-
+            //_context.VitalDatas.Update(vitalData);
+            //         await _context.SaveChangesAsync();
             return NoContent();
+            //return CreatedAtAction("GetVitalData", new { id = vitalData.ID }, vitalData);
         }
 
         // POST: api/VitalDatas
