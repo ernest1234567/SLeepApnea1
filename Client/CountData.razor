@@ -177,6 +177,14 @@ else
 					<RadzenAxisTitle Text="Revenue in USD" />
 					</RadzenValueAxis>-->
 					<Radzen.Blazor.RadzenBarOptions Radius="5" />
+					<RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="BPM Range" />
+                </RadzenCategoryAxis>
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Count" />
+                </RadzenValueAxis>
 					@*<RadzenButton Click="@OnClick" Text="Refresh" />*@
 				</Radzen.Blazor.RadzenChart>
 			</div>

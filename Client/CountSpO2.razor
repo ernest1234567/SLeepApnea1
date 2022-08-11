@@ -117,6 +117,14 @@ else
 					</RadzenValueAxis>-->
 					@*<RadzenCategoryAxis Step="80" Padding="20" FormatString="{0:MMM}">*@
 					<Radzen.Blazor.RadzenBarOptions Radius="5" />
+					<RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="SpO2 Range" />
+                </RadzenCategoryAxis>
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Count" />
+                </RadzenValueAxis>
 				</Radzen.Blazor.RadzenChart>
 			</div>
 		</div>

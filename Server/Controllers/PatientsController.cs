@@ -78,6 +78,7 @@ namespace SLeepApnea.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Patient>> PostPatient(Patient patient)
         {
+            //var patients = new Patient {Name =patient.Name,Email=patient.Email };
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 

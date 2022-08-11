@@ -34,48 +34,48 @@
 <button class="btn btn-primary" @onclick="@OnClick">Load</button>
 <div class="container">
 	<div class="row">
-        <div class="col-sm-12 my-5">
-            <Radzen.Blazor.RadzenChart @ref="@myCharts">
-                <Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@BPMs" CategoryProperty="Time" Title="BPM" ValueProperty="BPM">
-                    <Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
-                </Radzen.Blazor.RadzenLineSeries>
-                <RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="Time" />
-                </RadzenCategoryAxis>
-                <RadzenValueAxis>
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="BPM" />
-                </RadzenValueAxis>
-            </Radzen.Blazor.RadzenChart>
-            <Radzen.Blazor.RadzenChart @ref="@myChartss">
-                <Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@SpO2s" CategoryProperty="Time" Title="SpO2" ValueProperty="SpO2">
-                    <Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
-                </Radzen.Blazor.RadzenLineSeries>
-                <RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="Time" />
-                </RadzenCategoryAxis>
-                <RadzenValueAxis>
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="SpO2" />
-                </RadzenValueAxis>
-            </Radzen.Blazor.RadzenChart>
-            <Radzen.Blazor.RadzenChart @ref="@myChart">
-                <Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@Movements" CategoryProperty="Time" Title="Movement" ValueProperty="Movement">
-                    <Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
-                </Radzen.Blazor.RadzenLineSeries>
-                <RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="Time" />
-                </RadzenCategoryAxis>
-                <RadzenValueAxis>
-                    <RadzenGridLines Visible="true" />
-                    <RadzenAxisTitle Text="Movement" />
-                </RadzenValueAxis>
-            </Radzen.Blazor.RadzenChart>
+		<div class="col-sm-12 my-5">
+			<Radzen.Blazor.RadzenChart @ref="@myCharts">
+				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@BPMs"  CategoryProperty="Time" Title="BPM" ValueProperty="BPM">
+					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
+				</Radzen.Blazor.RadzenLineSeries>
+				<RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Time" />
+				</RadzenCategoryAxis>
+				<RadzenValueAxis>
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="BPM" />
+				</RadzenValueAxis>
+			</Radzen.Blazor.RadzenChart>
+			<Radzen.Blazor.RadzenChart @ref="@myChartss">
+				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@SpO2s"  CategoryProperty="Time" Title="SpO2" ValueProperty="SpO2" >
+					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
+				</Radzen.Blazor.RadzenLineSeries>
+				<RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Time" />
+				</RadzenCategoryAxis>
+				<RadzenValueAxis>
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="SpO2" />
+				</RadzenValueAxis>
+			</Radzen.Blazor.RadzenChart>
+			<Radzen.Blazor.RadzenChart @ref="@myChart">
+				<Radzen.Blazor.RadzenLineSeries Smooth="@smooth" Data="@Movements" CategoryProperty="Time" Title="Movement" ValueProperty="Movement">
+					<Radzen.Blazor.RadzenMarkers MarkerType="Radzen.Blazor.MarkerType.Circle" />
+				</Radzen.Blazor.RadzenLineSeries>
+				<RadzenCategoryAxis FormatString="{0:hh/mm/ss}">
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Time" />
+				</RadzenCategoryAxis>
+				<RadzenValueAxis>
+					<RadzenGridLines Visible="true" />
+					<RadzenAxisTitle Text="Movement" />
+				</RadzenValueAxis>
+			</Radzen.Blazor.RadzenChart>
 
-        </div>
+		</div>
 	</div>
 </div>
 

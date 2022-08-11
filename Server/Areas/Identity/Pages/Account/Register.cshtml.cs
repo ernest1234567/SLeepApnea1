@@ -90,20 +90,27 @@ namespace SLeepApnea.Server.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
-
+        //public async Task CreatePatient()
+        //{
+        //    if (Input.Roles == "Patient")
+        //    {
+        //        var patient = new Patient { Name = Input.FirstName, Email = Input.UserName, PhoneNumber = "99932393" };
+        //        await _httpClient.PostAsJsonAsync("https://localhost:44327/patients", patient);
+        //    }
+        //}
         public async Task<IActionResult>OnPostAsync(string returnUrl = null)
         {
+            var patient = new Patient { Name = Input.FirstName, Email = Input.UserName, PhoneNumber = "99932393" };
+            await _httpClient.PostAsJsonAsync("https://localhost:44327/patients", patient);
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+
                 var user = new ApplicationUser { UserName = Input.UserName, Email = Input.UserName, FirstName = Input.FirstName, LastName = Input.LastName, Roles = Input.Roles };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
-                Patient patient = new Patient{Name = Input.FirstName, Email= Input.UserName};
-                var patientresult = await _httpClient.PostAsJsonAsync("https://localhost:44327/patients", patient);
-
-                var roles = new IdentityRole(Input.Roles);
+             
+				var roles = new IdentityRole(Input.Roles);
                 var addRoleResult = await _roleManager.CreateAsync(roles);
 
                 var addUserRoleResult = await _userManager.AddToRoleAsync(user, Input.Roles);
